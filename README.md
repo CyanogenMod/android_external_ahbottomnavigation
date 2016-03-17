@@ -1,5 +1,5 @@
 # AHBottomNavigation
-A library to reproduce the behavior of the Bottom Navigation guidelines from Material Design (minSdkVersion=16).
+Library to implement the Bottom Navigation component from Material Design guidelines (minSdkVersion=16).
 
 # Demo
 <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="278" height="492" />
