@@ -2,11 +2,11 @@
 A library to reproduce the behavior of the Bottom Navigation guidelines from Material Design (minSdkVersion=16).
 
 # Demo
-<img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo4.gif" width="278" height="492" />
+<img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo4.gif" width="492" height="278" />
 
 # Features
 
-* Follow the bottom navigation bar guidelines (https://www.google.com/design/spec/components/bottom-navigation.html)
+* Follow the bottom navigation guidelines (https://www.google.com/design/spec/components/bottom-navigation.html)
 * Add 3 to 5 items (with title, icon & color)
 * Choose your style: Classic or colored navigation
 * Add a AHBottomNavigationListener to detect tab selection
@@ -22,7 +22,7 @@ buildscript {
 }
 
 dependencies {
-	compile 'com.aurelhubert:ah-bottom-navigation:0.1'
+    compile 'com.aurelhubert:ahbottomnavigation:0.1.1'
 }
 ```
 ## XML
@@ -47,12 +47,15 @@ bottomNavigation.addItem(item1);
 bottomNavigation.addItem(item2);
 bottomNavigation.addItem(item3);
 
+// Set background color
+bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
+
 // Change colors
 bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
 bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
 
 // Use colored navigation with circle reveal effect
-bottomNavigation.setColored(isChecked);
+bottomNavigation.setColored(true);
 
 // Set listener
 bottomNavigation.setAHBottomNavigationListener(new AHBottomNavigation.AHBottomNavigationListener() {
@@ -62,9 +65,6 @@ bottomNavigation.setAHBottomNavigationListener(new AHBottomNavigation.AHBottomNa
 	}
 });
 ```
-## minSDK version
-
-The current minSDK version is API level 16.
 
 ## Contributions
 
