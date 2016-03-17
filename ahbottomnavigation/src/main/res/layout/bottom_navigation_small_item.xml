@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/bottom_navigation_small_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/bottom_navigation_height"
+    android:background="?selectableItemBackgroundBorderless"
+    android:minWidth="@dimen/bottom_navigation_min_width"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/bottom_navigation_padding_bottom"
+    android:paddingTop="@dimen/bottom_navigation_small_padding_top">
+
+    <ImageView
+        android:id="@+id/bottom_navigation_small_item_icon"
+        android:layout_width="@dimen/bottom_navigation_icon"
+        android:layout_height="@dimen/bottom_navigation_icon"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/bottom_navigation_small_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:alpha="1"
+        android:gravity="center"
+        android:lines="1"
+        android:textColor="@color/colorInactive"
+        android:textSize="14sp"
+        tools:text="Label One"/>
+
+</FrameLayout>
