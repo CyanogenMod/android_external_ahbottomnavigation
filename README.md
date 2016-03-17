@@ -73,8 +73,8 @@ Feel free to create issues / pull requests.
 ## License
 
 ```
-BottomBar library for Android
-Copyright (c) 2016 Iiro Krankka (http://github.com/roughike).
+AHBottomNavigation library for Android
+Copyright (c) 2016 Aurelien Hubert (http://github.com/aurelhubert).
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
