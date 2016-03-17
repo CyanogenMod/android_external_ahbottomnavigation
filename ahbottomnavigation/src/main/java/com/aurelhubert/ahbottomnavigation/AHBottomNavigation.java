@@ -77,7 +77,7 @@ public class AHBottomNavigation extends FrameLayout {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		initBottomNavigation();
+		initViews();
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class AHBottomNavigation extends FrameLayout {
 	/**
 	 * Init
 	 */
-	private void initBottomNavigation() {
+	private void initViews() {
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			setElevation(context.getResources().getDimension(R.dimen.bottom_navigation_elevation));
@@ -212,8 +212,7 @@ public class AHBottomNavigation extends FrameLayout {
 				setBackgroundColor(defaultBackgroundColor);
 				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getResource(),
 						currentItem == i ? accentColor : inactiveColor));
-				title.setTextColor(currentItem == i ? accentColor :
-						ContextCompat.getColor(context, R.color.colorInactive));
+				title.setTextColor(currentItem == i ? accentColor : inactiveColor);
 			}
 
 			title.setTextSize(TypedValue.COMPLEX_UNIT_PX, currentItem == i ?
@@ -297,10 +296,7 @@ public class AHBottomNavigation extends FrameLayout {
 						ContextCompat.getColor(context, R.color.colorActiveSmall) :
 						ContextCompat.getColor(context, R.color.colorInactiveSmall));
 			} else {
-
 				setBackgroundColor(defaultBackgroundColor);
-
-				Log.d(TAG, items.get(i).getTitle() + " / " + i + " / " + currentItem);
 				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getResource(),
 						currentItem == i ? accentColor : inactiveColor));
 				title.setTextColor(currentItem == i ? accentColor : inactiveColor);
@@ -587,6 +583,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	public void setDefaultBackgroundColor(int defaultBackgroundColor) {
 		this.defaultBackgroundColor = defaultBackgroundColor;
+		createItems();
 	}
 
 	/**
@@ -605,6 +602,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	public void setAccentColor(int accentColor) {
 		this.accentColor = accentColor;
+		createItems();
 	}
 
 	/**
@@ -623,6 +621,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	public void setInactiveColor(int inactiveColor) {
 		this.inactiveColor = inactiveColor;
+		createItems();
 	}
 
 	/**

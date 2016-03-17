@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity {
+public class DemoActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
 		final SwitchCompat switchColored = (SwitchCompat) findViewById(R.id.home_switch_colored);
 		final SwitchCompat switchFourItems = (SwitchCompat) findViewById(R.id.home_switch_four_items);
 		final AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+		final TextView currentItem = (TextView) findViewById(R.id.home_current_item);
 		final ArrayList<AHBottomNavigationItem> items = new ArrayList<>();
 
 		AHBottomNavigationItem item1 = new AHBottomNavigationItem("Label One", R.drawable.ic_maps_place, Color.parseColor("#455C65"));
@@ -41,11 +43,13 @@ public class HomeActivity extends AppCompatActivity {
 		items.add(item3);
 
 		bottomNavigation.addItems(items);
-		bottomNavigation.setAccentColor(Color.parseColor("#00E676"));
+		bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
+		bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
 		bottomNavigation.setAHBottomNavigationListener(new AHBottomNavigation.AHBottomNavigationListener() {
 			@Override
 			public void onTabSelected(int position) {
-				//Toast.makeText(HomeActivity.this, "Select: " + position, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(DemoActivity.this, "Select: " + position, Toast.LENGTH_SHORT).show();
+				currentItem.setText("Current item: " + position);
 			}
 		});
 

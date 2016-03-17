@@ -51,6 +51,14 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/home_current_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Current item: 0"
+            android:textSize="18sp"/>
+
     </LinearLayout>
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
