@@ -15,9 +15,10 @@ Library to implement the Bottom Navigation component from Material Design guidel
 
 ## Gradle
 ```groovy
-buildscript {
-    repositories {
-        jcenter()
+// Very soon on JCenter! ;)
+repositories {
+    maven {
+        url 'https://dl.bintray.com/aurelhubert/maven/'
     }
 }
 
