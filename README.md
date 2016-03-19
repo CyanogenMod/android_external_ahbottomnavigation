@@ -16,7 +16,7 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ## Gradle
 ```groovy
 dependencies {
-    compile 'com.aurelhubert:ahbottomnavigation:0.1.1'
+    compile 'com.aurelhubert:ahbottomnavigation:0.1.2'
 }
 ```
 ## XML
@@ -55,9 +55,9 @@ bottomNavigation.setColored(true);
 bottomNavigation.setCurrentItem(1);
 
 // Set listener
-bottomNavigation.setAHBottomNavigationListener(new AHBottomNavigation.AHBottomNavigationListener() {
+bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 	@Override
-	public void onTabSelected(int position) {
+	public void onTabSelected(int position, boolean wasSelected) {
 		// Do something cool here...
 	}
 });
