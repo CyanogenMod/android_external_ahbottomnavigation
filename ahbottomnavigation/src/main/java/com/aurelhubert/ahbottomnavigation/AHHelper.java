@@ -4,6 +4,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -153,11 +154,13 @@ public class AHHelper {
 	}
 
 	/**
-	 * @param view
+	 * Check if the status bar is translucent
+	 *
+	 * @param context Context
 	 * @return
 	 */
-	public static boolean isTranslucentStatusBar(View view) {
-		Window w = ((Activity) view.getContext()).getWindow();
+	public static boolean isTranslucentStatusBar(Context context) {
+		Window w = unwrap(context).getWindow();
 		WindowManager.LayoutParams lp = w.getAttributes();
 		int flags = lp.flags;
 		if ((flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION) == WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION) {
@@ -167,10 +170,16 @@ public class AHHelper {
 		return false;
 	}
 
-	public static int getSoftButtonsBarSizePort(View view) {
+	/**
+	 * Get the height of the buttons bar
+	 *
+	 * @param context Context
+	 * @return
+	 */
+	public static int getSoftButtonsBarSizePort(Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			DisplayMetrics metrics = new DisplayMetrics();
-			Window window = ((Activity) view.getContext()).getWindow();
+			Window window = unwrap(context).getWindow();
 			window.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			int usableHeight = metrics.heightPixels;
 			window.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
@@ -181,5 +190,19 @@ public class AHHelper {
 				return 0;
 		}
 		return 0;
+	}
+
+	/**
+	 * Unwrap wactivity
+	 *
+	 * @param context Context
+	 * @return Activity
+	 */
+	public static Activity unwrap(Context context) {
+		while (!(context instanceof Activity)) {
+			ContextWrapper wrapper = (ContextWrapper) context;
+			context = wrapper.getBaseContext();
+		}
+		return (Activity) context;
 	}
 }

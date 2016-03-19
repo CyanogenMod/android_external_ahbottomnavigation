@@ -51,6 +51,9 @@ bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
 // Use colored navigation with circle reveal effect
 bottomNavigation.setColored(true);
 
+// Set current item programmatically
+bottomNavigation.setCurrentItem(1);
+
 // Set listener
 bottomNavigation.setAHBottomNavigationListener(new AHBottomNavigation.AHBottomNavigationListener() {
 	@Override

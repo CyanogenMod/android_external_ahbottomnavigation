@@ -126,7 +126,6 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	private void createItems() {
 
-		currentItem = 0;
 		removeAllViews();
 		views.clear();
 
@@ -324,6 +323,9 @@ public class AHBottomNavigation extends FrameLayout {
 	private void updateItems(final int itemIndex) {
 
 		if (currentItem == itemIndex) {
+			if (listener != null) {
+				listener.onCurrentTabSelected(itemIndex);
+			}
 			return;
 		}
 
@@ -411,6 +413,9 @@ public class AHBottomNavigation extends FrameLayout {
 	private void updateSmallItems(final int itemIndex) {
 
 		if (currentItem == itemIndex) {
+			if (listener != null) {
+				listener.onCurrentTabSelected(itemIndex);
+			}
 			return;
 		}
 
@@ -482,7 +487,6 @@ public class AHBottomNavigation extends FrameLayout {
 						itemActiveColor, itemInactiveColor);
 			}
 		}
-
 
 		currentItem = itemIndex;
 		currentColor = items.get(currentItem).getColor();
@@ -643,10 +647,14 @@ public class AHBottomNavigation extends FrameLayout {
 			Log.w(TAG, "The position is out of bounds of the items (" + items.size() + " elements)");
 			return;
 		}
-		if (items.size() == MIN_ITEMS) {
-			updateItems(position);
+		if (views.size() == 0) {
+			currentItem = position;
 		} else {
-			updateSmallItems(position);
+			if (items.size() == MIN_ITEMS) {
+				updateItems(position);
+			} else {
+				updateSmallItems(position);
+			}
 		}
 	}
 
@@ -659,6 +667,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	public interface AHBottomNavigationListener {
 		void onTabSelected(int position);
+		void onCurrentTabSelected(int position);
 	}
 
 }

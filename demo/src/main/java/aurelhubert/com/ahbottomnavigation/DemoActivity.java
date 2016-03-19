@@ -48,8 +48,12 @@ public class DemoActivity extends AppCompatActivity {
 		bottomNavigation.setAHBottomNavigationListener(new AHBottomNavigation.AHBottomNavigationListener() {
 			@Override
 			public void onTabSelected(int position) {
-				//Toast.makeText(DemoActivity.this, "Select: " + position, Toast.LENGTH_SHORT).show();
 				currentItem.setText("Current item: " + position);
+			}
+
+			@Override
+			public void onCurrentTabSelected(int position) {
+				currentItem.setText("Click on current item (" + position + ")");
 			}
 		});
 
@@ -72,7 +76,7 @@ public class DemoActivity extends AppCompatActivity {
 				}
 			}
 		});
-
+		
 	}
 
 }
