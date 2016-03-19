@@ -45,15 +45,10 @@ public class DemoActivity extends AppCompatActivity {
 		bottomNavigation.addItems(items);
 		bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
 		bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
-		bottomNavigation.setAHBottomNavigationListener(new AHBottomNavigation.AHBottomNavigationListener() {
+		bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 			@Override
-			public void onTabSelected(int position) {
-				currentItem.setText("Current item: " + position);
-			}
-
-			@Override
-			public void onCurrentTabSelected(int position) {
-				currentItem.setText("Click on current item (" + position + ")");
+			public void onTabSelected(int position, boolean wasSelected) {
+				currentItem.setText("Current item: " + position + "\n(was selected: " + wasSelected + ")");
 			}
 		});
 
@@ -76,7 +71,7 @@ public class DemoActivity extends AppCompatActivity {
 				}
 			}
 		});
-		
+
 	}
 
 }

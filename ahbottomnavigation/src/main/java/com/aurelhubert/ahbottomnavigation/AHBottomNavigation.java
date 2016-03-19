@@ -33,6 +33,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	// Listener
 	private AHBottomNavigationListener listener;
+	private OnTabSelectedListener tabSelectedListener;
 
 	// Variables
 	private Context context;
@@ -323,8 +324,8 @@ public class AHBottomNavigation extends FrameLayout {
 	private void updateItems(final int itemIndex) {
 
 		if (currentItem == itemIndex) {
-			if (listener != null) {
-				listener.onCurrentTabSelected(itemIndex);
+			if (tabSelectedListener != null) {
+				tabSelectedListener.onTabSelected(itemIndex, true);
 			}
 			return;
 		}
@@ -405,6 +406,9 @@ public class AHBottomNavigation extends FrameLayout {
 		if (listener != null) {
 			listener.onTabSelected(itemIndex);
 		}
+		if (tabSelectedListener != null) {
+			tabSelectedListener.onTabSelected(itemIndex, false);
+		}
 	}
 
 	/**
@@ -413,8 +417,8 @@ public class AHBottomNavigation extends FrameLayout {
 	private void updateSmallItems(final int itemIndex) {
 
 		if (currentItem == itemIndex) {
-			if (listener != null) {
-				listener.onCurrentTabSelected(itemIndex);
+			if (tabSelectedListener != null) {
+				tabSelectedListener.onTabSelected(itemIndex, true);
 			}
 			return;
 		}
@@ -494,6 +498,9 @@ public class AHBottomNavigation extends FrameLayout {
 		if (listener != null) {
 			listener.onTabSelected(itemIndex);
 		}
+		if (tabSelectedListener != null) {
+			tabSelectedListener.onTabSelected(itemIndex, false);
+		}
 	}
 
 
@@ -556,20 +563,6 @@ public class AHBottomNavigation extends FrameLayout {
 		createItems();
 	}
 
-
-	/**
-	 * Set the GraphView listener
-	 */
-	public void setAHBottomNavigationListener(AHBottomNavigationListener listener) {
-		this.listener = listener;
-	}
-
-	/**
-	 * Remove the GraphView listener
-	 */
-	public void removeAHBottomNavigationListener() {
-		this.listener = null;
-	}
 
 	/**
 	 * Return the bottom navigation background color
@@ -658,6 +651,36 @@ public class AHBottomNavigation extends FrameLayout {
 		}
 	}
 
+	/**
+	 * Set the GraphView listener
+	 */
+	@Deprecated
+	public void setAHBottomNavigationListener(AHBottomNavigationListener listener) {
+		this.listener = listener;
+	}
+
+	/**
+	 * Remove the GraphView listener
+	 */
+	@Deprecated
+	public void removeAHBottomNavigationListener() {
+		this.listener = null;
+	}
+
+	/**
+	 * Set AHOnTabSelectedListener
+	 */
+	public void setOnTabSelectedListener(OnTabSelectedListener tabSelectedListener) {
+		this.tabSelectedListener = tabSelectedListener;
+	}
+
+	/**
+	 * Remove AHOnTabSelectedListener
+	 */
+	public void removeOnTabSelectedListener() {
+		this.tabSelectedListener = null;
+	}
+
 	////////////////
 	// INTERFACES //
 	////////////////
@@ -665,9 +688,16 @@ public class AHBottomNavigation extends FrameLayout {
 	/**
 	 * Interface for Bottom Navigation
 	 */
+	@Deprecated
 	public interface AHBottomNavigationListener {
 		void onTabSelected(int position);
-		void onCurrentTabSelected(int position);
+	}
+
+	/**
+	 *
+	 */
+	public interface OnTabSelectedListener {
+		void onTabSelected(int position, boolean wasSelected);
 	}
 
 }
