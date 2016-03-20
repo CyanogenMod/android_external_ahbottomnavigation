@@ -86,7 +86,7 @@ bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedLi
 ## TODO
 
 * Add color under the navigation bar.
-* Add an example to show/hide the bottom navigation (with animation) when used with a recyclerview https://www.google.com/design/spec/components/bottom-navigation.html#bottom-navigation-behavior)
+* Manage tablet
 
 ## Contributions
 
