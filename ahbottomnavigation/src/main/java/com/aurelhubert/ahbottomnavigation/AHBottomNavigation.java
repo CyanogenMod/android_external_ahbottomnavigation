@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -49,6 +50,7 @@ public class AHBottomNavigation extends FrameLayout {
 	private int currentItem = 0;
 	private int currentColor = 0;
 	private float selectedItemWidth, notSelectedItemWidth;
+	private boolean behaviorTranslationEnabled = true;
 
 
 	/**
@@ -113,6 +115,9 @@ public class AHBottomNavigation extends FrameLayout {
 		ViewGroup.LayoutParams params = getLayoutParams();
 		params.width = ViewGroup.LayoutParams.MATCH_PARENT;
 		params.height = (int) context.getResources().getDimension(R.dimen.bottom_navigation_height);
+		if (getParent() instanceof CoordinatorLayout && behaviorTranslationEnabled) {
+			((CoordinatorLayout.LayoutParams) params).setBehavior(new AHBottomNavigationBehavior());
+		}
 		setLayoutParams(params);
 
 		if (items.size() < MIN_ITEMS) {
@@ -549,6 +554,14 @@ public class AHBottomNavigation extends FrameLayout {
 	}
 
 	/**
+	 * Return the number of items
+	 * @return int
+	 */
+	public int getItemsCount() {
+		return items.size();
+	}
+
+	/**
 	 * Return if the Bottom Navigation is colored
 	 */
 	public boolean isColored() {
@@ -648,6 +661,29 @@ public class AHBottomNavigation extends FrameLayout {
 			} else {
 				updateSmallItems(position);
 			}
+		}
+	}
+
+	/**
+	 * Return if the behavior translation is enabled
+	 *
+	 * @return a boolean value
+	 */
+	public boolean isBehaviorTranslationEnabled() {
+		return behaviorTranslationEnabled;
+	}
+
+	/**
+	 * Set the behavior translation value
+	 *
+	 * @param behaviorTranslationEnabled boolean for the state
+	 */
+	public void setBehaviorTranslationEnabled(boolean behaviorTranslationEnabled) {
+		this.behaviorTranslationEnabled = behaviorTranslationEnabled;
+		if (getParent() instanceof CoordinatorLayout) {
+			ViewGroup.LayoutParams params = getLayoutParams();
+			((CoordinatorLayout.LayoutParams) params).setBehavior(behaviorTranslationEnabled ?
+					new AHBottomNavigationBehavior() : null);
 		}
 	}
 

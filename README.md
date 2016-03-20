@@ -26,6 +26,23 @@ dependencies {
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 ```
+OR
+```xml
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    ...
+
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
+</android.support.design.widget.CoordinatorLayout>
+```
 
 ## Activity/Fragment
 ```java
@@ -43,6 +60,9 @@ bottomNavigation.addItem(item3);
 
 // Set background color
 bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
+
+// Disable the translation inside the CoordinatorLayout
+bottomNavigation.setBehaviorTranslationEnabled(false);
 
 // Change colors
 bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
