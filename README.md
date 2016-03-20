@@ -1,25 +1,25 @@
 # AHBottomNavigation
 Library to implement the Bottom Navigation component from Material Design guidelines (minSdkVersion=16).
 
-# Demo
+## Demo
 <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="278" height="492" />
 
-# Features
+## Features
 
 * Follow the bottom navigation guidelines (https://www.google.com/design/spec/components/bottom-navigation.html)
 * Add 3 to 5 items (with title, icon & color)
 * Choose your style: Classic or colored navigation
-* Add a AHBottomNavigationListener to detect tab selection
+* Add a OnTabSelectedListener to detect tab selection
 
-# How to?
+## How to?
 
-## Gradle
+### Gradle
 ```groovy
 dependencies {
     compile 'com.aurelhubert:ahbottomnavigation:0.1.3'
 }
 ```
-## XML
+### XML
 ```xml
 <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottom_navigation"
@@ -44,7 +44,7 @@ OR
 </android.support.design.widget.CoordinatorLayout>
 ```
 
-## Activity/Fragment
+### Activity/Fragment
 ```java
 AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
@@ -75,13 +75,18 @@ bottomNavigation.setColored(true);
 bottomNavigation.setCurrentItem(1);
 
 // Set listener
-bottomNavigation.setAHBottomNavigationListener(new AHBottomNavigation.AHBottomNavigationListener() {
+bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 	@Override
-	public void onTabSelected(int position) {
+	public void onTabSelected(int position, boolean wasSelected) {
 		// Do something cool here...
 	}
 });
 ```
+
+## TODO
+
+* Add color under the navigation bar.
+* Add an example to show/hide the bottom navigation (with animation) when used with a recyclerview https://www.google.com/design/spec/components/bottom-navigation.html#bottom-navigation-behavior)
 
 ## Contributions
 
