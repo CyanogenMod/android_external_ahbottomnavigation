@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -27,13 +26,12 @@ public class AHHelper {
 	 * Return a tint drawable
 	 *
 	 * @param context
-	 * @param drawableResource
+	 * @param drawable
 	 * @param color
 	 * @return
 	 */
-	public static Drawable getTintDrawable(Context context, int drawableResource, int color) {
-		Drawable normalDrawable = ContextCompat.getDrawable(context, drawableResource);
-		Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
+	public static Drawable getTintDrawable(Context context, Drawable drawable, int color) {
+		Drawable wrapDrawable = DrawableCompat.wrap(drawable);
 		DrawableCompat.setTint(wrapDrawable, color);
 		return wrapDrawable;
 	}
@@ -122,7 +120,7 @@ public class AHHelper {
 	/**
 	 * Update image view color with animation
 	 */
-	public static void updateDrawableColor(final Context context, final int drawable,
+	public static void updateDrawableColor(final Context context, final Drawable drawable,
 	                                       final ImageView imageView, int fromColor, int toColor) {
 		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
 		colorAnimation.setDuration(150);

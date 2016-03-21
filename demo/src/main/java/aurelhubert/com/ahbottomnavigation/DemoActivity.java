@@ -3,6 +3,7 @@ package aurelhubert.com.ahbottomnavigation;
 import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -31,9 +32,9 @@ public class DemoActivity extends AppCompatActivity {
 
 		bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
-		AHBottomNavigationItem item1 = new AHBottomNavigationItem("Label One", R.drawable.ic_maps_place, Color.parseColor("#455C65"));
-		AHBottomNavigationItem item2 = new AHBottomNavigationItem("Label Two", R.drawable.ic_maps_local_bar, Color.parseColor("#00886A"));
-		AHBottomNavigationItem item3 = new AHBottomNavigationItem("Label Three", R.drawable.ic_maps_local_restaurant, Color.parseColor("#8B6B62"));
+		AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_maps_place, R.color.color_tab_1);
+		AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_maps_local_bar, R.color.color_tab_2);
+		AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_maps_local_restaurant, R.color.color_tab_3);
 
 		bottomNavigationItems.add(item1);
 		bottomNavigationItems.add(item2);
@@ -82,8 +83,13 @@ public class DemoActivity extends AppCompatActivity {
 	 */
 	public void updateBottomNavigationItems(boolean addItems) {
 
-		AHBottomNavigationItem item4 = new AHBottomNavigationItem("Label Four", R.drawable.ic_maps_local_bar, Color.parseColor("#6C4A42"));
-		AHBottomNavigationItem item5 = new AHBottomNavigationItem("Label Five", R.drawable.ic_maps_place, Color.parseColor("#F63D2B"));
+
+		AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.tab_4),
+				ContextCompat.getDrawable(this, R.drawable.ic_maps_local_bar),
+				ContextCompat.getColor(this, R.color.color_tab_5));
+		AHBottomNavigationItem item5 = new AHBottomNavigationItem(getString(R.string.tab_5),
+				ContextCompat.getDrawable(this, R.drawable.ic_maps_place),
+				ContextCompat.getColor(this, R.color.color_tab_5));
 
 		if (addItems) {
 			bottomNavigation.addItem(item4);

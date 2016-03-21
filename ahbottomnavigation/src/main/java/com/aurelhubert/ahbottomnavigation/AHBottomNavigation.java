@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -190,8 +191,8 @@ public class AHBottomNavigation extends FrameLayout {
 			View view = inflater.inflate(R.layout.bottom_navigation_item, this, false);
 			ImageView icon = (ImageView) view.findViewById(R.id.bottom_navigation_item_icon);
 			TextView title = (TextView) view.findViewById(R.id.bottom_navigation_item_title);
-			icon.setImageResource(item.getResource());
-			title.setText(item.getTitle());
+			icon.setImageDrawable(item.getDrawable(context));
+			title.setText(item.getTitle(context));
 
 			if (i == currentItem) {
 				int activePaddingTop = (int) context.getResources()
@@ -202,11 +203,11 @@ public class AHBottomNavigation extends FrameLayout {
 
 			if (colored) {
 				if (i == currentItem) {
-					setBackgroundColor(item.getColor());
-					currentColor = item.getColor();
+					setBackgroundColor(item.getColor(context));
+					currentColor = item.getColor(context);
 				}
 
-				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getResource(),
+				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getDrawable(context),
 						currentItem == i ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
 								ContextCompat.getColor(context, R.color.colorInactiveSmall)));
 				title.setTextColor(currentItem == i ?
@@ -215,7 +216,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 			} else {
 				setBackgroundColor(defaultBackgroundColor);
-				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getResource(),
+				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getDrawable(context),
 						currentItem == i ? accentColor : inactiveColor));
 				title.setTextColor(currentItem == i ? accentColor : inactiveColor);
 			}
@@ -276,8 +277,8 @@ public class AHBottomNavigation extends FrameLayout {
 			View view = inflater.inflate(R.layout.bottom_navigation_small_item, this, false);
 			ImageView icon = (ImageView) view.findViewById(R.id.bottom_navigation_small_item_icon);
 			TextView title = (TextView) view.findViewById(R.id.bottom_navigation_small_item_title);
-			icon.setImageResource(item.getResource());
-			title.setText(item.getTitle());
+			icon.setImageDrawable(item.getDrawable(context));
+			title.setText(item.getTitle(context));
 
 			if (i == currentItem) {
 				int activePaddingTop = (int) context.getResources()
@@ -290,11 +291,11 @@ public class AHBottomNavigation extends FrameLayout {
 
 			if (colored) {
 				if (i == currentItem) {
-					setBackgroundColor(item.getColor());
-					currentColor = item.getColor();
+					setBackgroundColor(item.getColor(context));
+					currentColor = item.getColor(context);
 				}
 
-				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getResource(),
+				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getDrawable(context),
 						currentItem == i ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
 								ContextCompat.getColor(context, R.color.colorInactiveSmall)));
 				title.setTextColor(currentItem == i ?
@@ -302,7 +303,7 @@ public class AHBottomNavigation extends FrameLayout {
 						ContextCompat.getColor(context, R.color.colorInactiveSmall));
 			} else {
 				setBackgroundColor(defaultBackgroundColor);
-				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getResource(),
+				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getDrawable(context),
 						currentItem == i ? accentColor : inactiveColor));
 				title.setTextColor(currentItem == i ? accentColor : inactiveColor);
 			}
@@ -355,11 +356,11 @@ public class AHBottomNavigation extends FrameLayout {
 				AHHelper.updateTopPadding(container, inactivePaddingTop, activePaddingTop);
 				AHHelper.updateTextColor(title, itemInactiveColor, itemActiveColor);
 				AHHelper.updateTextSize(title, inactiveSize, activeSize);
-				AHHelper.updateDrawableColor(context, items.get(itemIndex).getResource(), icon,
+				AHHelper.updateDrawableColor(context, items.get(itemIndex).getDrawable(context), icon,
 						itemInactiveColor, itemActiveColor);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
-					backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor());
+					backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor(context));
 					int finalRadius = Math.max(getWidth(), getHeight());
 
 					int cx = (int) views.get(itemIndex).getX() + views.get(itemIndex).getWidth() / 2;
@@ -372,7 +373,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							setBackgroundColor(items.get(itemIndex).getColor());
+							setBackgroundColor(items.get(itemIndex).getColor(context));
 						}
 
 						@Override
@@ -386,7 +387,7 @@ public class AHBottomNavigation extends FrameLayout {
 					anim.start();
 				} else if (colored) {
 					AHHelper.updateViewBackgroundColor(this, currentColor,
-							items.get(itemIndex).getColor());
+							items.get(itemIndex).getColor(context));
 				} else {
 					setBackgroundColor(defaultBackgroundColor);
 				}
@@ -400,13 +401,13 @@ public class AHBottomNavigation extends FrameLayout {
 				AHHelper.updateTopPadding(container, activePaddingTop, inactivePaddingTop);
 				AHHelper.updateTextColor(title, itemActiveColor, itemInactiveColor);
 				AHHelper.updateTextSize(title, activeSize, inactiveSize);
-				AHHelper.updateDrawableColor(context, items.get(currentItem).getResource(), icon,
+				AHHelper.updateDrawableColor(context, items.get(currentItem).getDrawable(context), icon,
 						itemActiveColor, itemInactiveColor);
 			}
 		}
 
 		currentItem = itemIndex;
-		currentColor = items.get(currentItem).getColor();
+		currentColor = items.get(currentItem).getColor(context);
 
 		if (listener != null) {
 			listener.onTabSelected(itemIndex);
@@ -447,11 +448,11 @@ public class AHBottomNavigation extends FrameLayout {
 				AHHelper.updateTextColor(title, itemInactiveColor, itemActiveColor);
 				AHHelper.updateAlpha(title, 0, 1);
 				AHHelper.updateWidth(container, notSelectedItemWidth, selectedItemWidth);
-				AHHelper.updateDrawableColor(context, items.get(itemIndex).getResource(), icon,
+				AHHelper.updateDrawableColor(context, items.get(itemIndex).getDrawable(context), icon,
 						itemInactiveColor, itemActiveColor);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
-					backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor());
+					backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor(context));
 					int finalRadius = Math.max(getWidth(), getHeight());
 					int cx = (int) views.get(itemIndex).getX() + views.get(itemIndex).getWidth() / 2;
 					int cy = views.get(itemIndex).getHeight() / 2;
@@ -463,7 +464,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							setBackgroundColor(items.get(itemIndex).getColor());
+							setBackgroundColor(items.get(itemIndex).getColor(context));
 						}
 
 						@Override
@@ -477,7 +478,7 @@ public class AHBottomNavigation extends FrameLayout {
 					anim.start();
 				} else if (colored) {
 					AHHelper.updateViewBackgroundColor(this, currentColor,
-							items.get(itemIndex).getColor());
+							items.get(itemIndex).getColor(context));
 				} else {
 					setBackgroundColor(defaultBackgroundColor);
 				}
@@ -492,13 +493,13 @@ public class AHBottomNavigation extends FrameLayout {
 				AHHelper.updateTextColor(title, itemActiveColor, itemInactiveColor);
 				AHHelper.updateAlpha(title, 1, 0);
 				AHHelper.updateWidth(container, selectedItemWidth, notSelectedItemWidth);
-				AHHelper.updateDrawableColor(context, items.get(currentItem).getResource(), icon,
+				AHHelper.updateDrawableColor(context, items.get(currentItem).getDrawable(context), icon,
 						itemActiveColor, itemInactiveColor);
 			}
 		}
 
 		currentItem = itemIndex;
-		currentColor = items.get(currentItem).getColor();
+		currentColor = items.get(currentItem).getColor(context);
 
 		if (listener != null) {
 			listener.onTabSelected(itemIndex);
@@ -591,7 +592,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 *
 	 * @param defaultBackgroundColor The bottom navigation background color
 	 */
-	public void setDefaultBackgroundColor(int defaultBackgroundColor) {
+	public void setDefaultBackgroundColor(@ColorInt int defaultBackgroundColor) {
 		this.defaultBackgroundColor = defaultBackgroundColor;
 		createItems();
 	}
