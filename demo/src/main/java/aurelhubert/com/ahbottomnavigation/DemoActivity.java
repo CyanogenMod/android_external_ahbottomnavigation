@@ -40,6 +40,7 @@ public class DemoActivity extends AppCompatActivity {
 		bottomNavigationItems.add(item2);
 		bottomNavigationItems.add(item3);
 
+
 		bottomNavigation.addItems(bottomNavigationItems);
 		bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
 		bottomNavigation.setInactiveColor(Color.parseColor("#747474"));

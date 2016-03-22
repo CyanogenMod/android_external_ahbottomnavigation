@@ -52,6 +52,8 @@ public class AHBottomNavigation extends FrameLayout {
 	private int currentColor = 0;
 	private float selectedItemWidth, notSelectedItemWidth;
 	private boolean behaviorTranslationEnabled = true;
+	private boolean forceTint = false;
+	private boolean forceTitlesDisplay = false;
 
 
 	/**
@@ -151,7 +153,7 @@ public class AHBottomNavigation extends FrameLayout {
 		LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
 		addView(linearLayout, layoutParams);
 
-		if (items.size() == MIN_ITEMS) {
+		if (items.size() == MIN_ITEMS || forceTitlesDisplay) {
 			createClassicItems(linearLayout);
 		} else {
 			createSmallItems(linearLayout);
@@ -177,7 +179,8 @@ public class AHBottomNavigation extends FrameLayout {
 		}
 
 		float itemWidth = layoutWidth / items.size();
-		if (itemWidth < minWidth) {
+		if (forceTitlesDisplay) {
+		} else if (itemWidth < minWidth) {
 			itemWidth = minWidth;
 		} else if (itemWidth > maxWidth) {
 			itemWidth = maxWidth;
@@ -207,17 +210,17 @@ public class AHBottomNavigation extends FrameLayout {
 					currentColor = item.getColor(context);
 				}
 
-				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getDrawable(context),
+				icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
 						currentItem == i ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
-								ContextCompat.getColor(context, R.color.colorInactiveSmall)));
+								ContextCompat.getColor(context, R.color.colorInactiveSmall), forceTint));
 				title.setTextColor(currentItem == i ?
 						ContextCompat.getColor(context, R.color.colorActiveSmall) :
 						ContextCompat.getColor(context, R.color.colorInactiveSmall));
 
 			} else {
 				setBackgroundColor(defaultBackgroundColor);
-				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getDrawable(context),
-						currentItem == i ? accentColor : inactiveColor));
+				icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
+						currentItem == i ? accentColor : inactiveColor, forceTint));
 				title.setTextColor(currentItem == i ? accentColor : inactiveColor);
 			}
 
@@ -295,16 +298,16 @@ public class AHBottomNavigation extends FrameLayout {
 					currentColor = item.getColor(context);
 				}
 
-				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getDrawable(context),
+				icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
 						currentItem == i ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
-								ContextCompat.getColor(context, R.color.colorInactiveSmall)));
+								ContextCompat.getColor(context, R.color.colorInactiveSmall), forceTint));
 				title.setTextColor(currentItem == i ?
 						ContextCompat.getColor(context, R.color.colorActiveSmall) :
 						ContextCompat.getColor(context, R.color.colorInactiveSmall));
 			} else {
 				setBackgroundColor(defaultBackgroundColor);
-				icon.setImageDrawable(AHHelper.getTintDrawable(context, items.get(i).getDrawable(context),
-						currentItem == i ? accentColor : inactiveColor));
+				icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
+						currentItem == i ? accentColor : inactiveColor, forceTint));
 				title.setTextColor(currentItem == i ? accentColor : inactiveColor);
 			}
 
@@ -357,7 +360,7 @@ public class AHBottomNavigation extends FrameLayout {
 				AHHelper.updateTextColor(title, itemInactiveColor, itemActiveColor);
 				AHHelper.updateTextSize(title, inactiveSize, activeSize);
 				AHHelper.updateDrawableColor(context, items.get(itemIndex).getDrawable(context), icon,
-						itemInactiveColor, itemActiveColor);
+						itemInactiveColor, itemActiveColor, forceTint);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
 					backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor(context));
@@ -402,7 +405,7 @@ public class AHBottomNavigation extends FrameLayout {
 				AHHelper.updateTextColor(title, itemActiveColor, itemInactiveColor);
 				AHHelper.updateTextSize(title, activeSize, inactiveSize);
 				AHHelper.updateDrawableColor(context, items.get(currentItem).getDrawable(context), icon,
-						itemActiveColor, itemInactiveColor);
+						itemActiveColor, itemInactiveColor, forceTint);
 			}
 		}
 
@@ -449,7 +452,7 @@ public class AHBottomNavigation extends FrameLayout {
 				AHHelper.updateAlpha(title, 0, 1);
 				AHHelper.updateWidth(container, notSelectedItemWidth, selectedItemWidth);
 				AHHelper.updateDrawableColor(context, items.get(itemIndex).getDrawable(context), icon,
-						itemInactiveColor, itemActiveColor);
+						itemInactiveColor, itemActiveColor, forceTint);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
 					backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor(context));
@@ -494,7 +497,7 @@ public class AHBottomNavigation extends FrameLayout {
 				AHHelper.updateAlpha(title, 1, 0);
 				AHHelper.updateWidth(container, selectedItemWidth, notSelectedItemWidth);
 				AHHelper.updateDrawableColor(context, items.get(currentItem).getDrawable(context), icon,
-						itemActiveColor, itemInactiveColor);
+						itemActiveColor, itemInactiveColor, forceTint);
 			}
 		}
 
@@ -556,6 +559,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Return the number of items
+	 *
 	 * @return int
 	 */
 	public int getItemsCount() {
@@ -689,6 +693,46 @@ public class AHBottomNavigation extends FrameLayout {
 	}
 
 	/**
+	 * Return if the tint should be forced (with setColorFilter)
+	 *
+	 * @return Boolean
+	 */
+	public boolean isForceTint() {
+		return forceTint;
+	}
+
+	/**
+	 * Set the force tint value
+	 * If forceTint = true, the tint is made with drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+	 *
+	 * @param forceTint Boolean
+	 */
+	public void setForceTint(boolean forceTint) {
+		this.forceTint = forceTint;
+		createItems();
+	}
+
+	/**
+	 * Return if we force the titles to be displayed
+	 *
+	 * @return Boolean
+	 */
+	public boolean isForceTitlesDisplay() {
+		return forceTitlesDisplay;
+	}
+
+	/**
+	 * Force the titles to be displayed (or used the classic behavior)
+	 * Note: Against Material Design guidelines
+	 *
+	 * @param forceTitlesDisplay Boolean
+	 */
+	public void setForceTitlesDisplay(boolean forceTitlesDisplay) {
+		this.forceTitlesDisplay = forceTitlesDisplay;
+		createItems();
+	}
+
+	/**
 	 * Set the GraphView listener
 	 */
 	@Deprecated
@@ -717,6 +761,7 @@ public class AHBottomNavigation extends FrameLayout {
 	public void removeOnTabSelectedListener() {
 		this.tabSelectedListener = null;
 	}
+
 
 	////////////////
 	// INTERFACES //

@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -25,12 +26,18 @@ public class AHHelper {
 	/**
 	 * Return a tint drawable
 	 *
-	 * @param context
 	 * @param drawable
 	 * @param color
+	 * @param forceTint
 	 * @return
 	 */
-	public static Drawable getTintDrawable(Context context, Drawable drawable, int color) {
+	public static Drawable getTintDrawable(Drawable drawable, int color, boolean forceTint) {
+		if (forceTint) {
+			drawable.clearColorFilter();
+			drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+			drawable.invalidateSelf();
+			return drawable;
+		}
 		Drawable wrapDrawable = DrawableCompat.wrap(drawable);
 		DrawableCompat.setTint(wrapDrawable, color);
 		return wrapDrawable;
@@ -121,14 +128,15 @@ public class AHHelper {
 	 * Update image view color with animation
 	 */
 	public static void updateDrawableColor(final Context context, final Drawable drawable,
-	                                       final ImageView imageView, int fromColor, int toColor) {
+	                                       final ImageView imageView, int fromColor, int toColor,
+	                                       final boolean forceTint) {
 		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
 		colorAnimation.setDuration(150);
 		colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animator) {
-				imageView.setImageDrawable(AHHelper.getTintDrawable(context, drawable,
-						(Integer) animator.getAnimatedValue()));
+				imageView.setImageDrawable(AHHelper.getTintDrawable(drawable,
+						(Integer) animator.getAnimatedValue(), forceTint));
 			}
 		});
 		colorAnimation.start();
