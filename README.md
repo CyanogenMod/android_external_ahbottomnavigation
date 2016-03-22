@@ -12,13 +12,14 @@ Library to implement the Bottom Navigation component from Material Design guidel
 * Add 3 to 5 items (with title, icon & color)
 * Choose your style: Classic or colored navigation
 * Add a OnTabSelectedListener to detect tab selection
+* Support icon font color with "setForceTint(true)"
 
 ## How to?
 
 ### Gradle
 ```groovy
 dependencies {
-    compile 'com.aurelhubert:ahbottomnavigation:0.1.4'
+    compile 'com.aurelhubert:ahbottomnavigation:0.1.5'
 }
 ```
 ### XML
@@ -69,6 +70,12 @@ bottomNavigation.setBehaviorTranslationEnabled(false);
 // Change colors
 bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
 bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
+
+// Force to tint the drawable (useful for font with icon for example)
+bottomNavigation.setForceTint(true);
+
+// Force the titles to be displayed (against Material Design guidelines!)
+bottomNavigation.setForceTitlesDisplay(true);
 
 // Use colored navigation with circle reveal effect
 bottomNavigation.setColored(true);
