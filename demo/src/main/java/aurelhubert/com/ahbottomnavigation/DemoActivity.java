@@ -87,7 +87,7 @@ public class DemoActivity extends AppCompatActivity {
 
 		AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.tab_4),
 				ContextCompat.getDrawable(this, R.drawable.ic_maps_local_bar),
-				ContextCompat.getColor(this, R.color.color_tab_5));
+				ContextCompat.getColor(this, R.color.color_tab_4));
 		AHBottomNavigationItem item5 = new AHBottomNavigationItem(getString(R.string.tab_5),
 				ContextCompat.getDrawable(this, R.drawable.ic_maps_place),
 				ContextCompat.getColor(this, R.color.color_tab_5));
