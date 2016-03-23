@@ -18,7 +18,7 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ### Gradle
 ```groovy
 dependencies {
-    compile 'com.aurelhubert:ahbottomnavigation:0.1.5'
+    compile 'com.aurelhubert:ahbottomnavigation:0.1.6'
 }
 ```
 ### XML

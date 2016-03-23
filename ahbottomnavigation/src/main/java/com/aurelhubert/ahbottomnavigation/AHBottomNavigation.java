@@ -173,17 +173,28 @@ public class AHBottomNavigation extends FrameLayout {
 		float minWidth = context.getResources().getDimension(R.dimen.bottom_navigation_min_width);
 		float maxWidth = context.getResources().getDimension(R.dimen.bottom_navigation_max_width);
 
+		if (forceTitlesDisplay && items.size() > MIN_ITEMS) {
+			minWidth = context.getResources().getDimension(R.dimen.bottom_navigation_small_inactive_min_width);
+			maxWidth = context.getResources().getDimension(R.dimen.bottom_navigation_small_inactive_max_width);
+		}
+
 		int layoutWidth = getWidth();
 		if (layoutWidth == 0 || items.size() == 0) {
 			return;
 		}
 
 		float itemWidth = layoutWidth / items.size();
-		if (forceTitlesDisplay) {
-		} else if (itemWidth < minWidth) {
+		if (itemWidth < minWidth) {
 			itemWidth = minWidth;
 		} else if (itemWidth > maxWidth) {
 			itemWidth = maxWidth;
+		}
+
+		float activeSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_active);
+		float inactiveSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_inactive);
+		if (forceTitlesDisplay && items.size() > MIN_ITEMS) {
+			activeSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_forced_active);
+			inactiveSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_forced_inactive);
 		}
 
 		for (int i = 0; i < items.size(); i++) {
@@ -192,10 +203,15 @@ public class AHBottomNavigation extends FrameLayout {
 			AHBottomNavigationItem item = items.get(itemIndex);
 
 			View view = inflater.inflate(R.layout.bottom_navigation_item, this, false);
+			FrameLayout container = (FrameLayout) view.findViewById(R.id.bottom_navigation_container);
 			ImageView icon = (ImageView) view.findViewById(R.id.bottom_navigation_item_icon);
 			TextView title = (TextView) view.findViewById(R.id.bottom_navigation_item_title);
 			icon.setImageDrawable(item.getDrawable(context));
 			title.setText(item.getTitle(context));
+
+			if (forceTitlesDisplay && items.size() > MIN_ITEMS) {
+				container.setPadding(0, container.getPaddingTop(), 0, container.getPaddingBottom());
+			}
 
 			if (i == currentItem) {
 				int activePaddingTop = (int) context.getResources()
@@ -224,10 +240,7 @@ public class AHBottomNavigation extends FrameLayout {
 				title.setTextColor(currentItem == i ? accentColor : inactiveColor);
 			}
 
-			title.setTextSize(TypedValue.COMPLEX_UNIT_PX, currentItem == i ?
-					context.getResources().getDimension(R.dimen.bottom_navigation_text_size_active) :
-					context.getResources().getDimension(R.dimen.bottom_navigation_text_size_inactive));
-
+			title.setTextSize(TypedValue.COMPLEX_UNIT_PX, currentItem == i ? activeSize : inactiveSize);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -343,6 +356,11 @@ public class AHBottomNavigation extends FrameLayout {
 		int inactivePaddingTop = (int) context.getResources().getDimension(R.dimen.bottom_navigation_padding_top_inactive);
 		float activeSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_active);
 		float inactiveSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_inactive);
+		if (forceTitlesDisplay && items.size() > MIN_ITEMS) {
+			activeSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_forced_active);
+			inactiveSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_forced_inactive);
+		}
+
 		int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
 				accentColor;
 		int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorInactiveSmall) :
