@@ -1,4 +1,3 @@
-<img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/AHBottomNavigation.png?raw=true" title="AHBottomNavigation" alt="AHBottomNavigation logo" width="50%" />
 
 # AHBottomNavigation
 Library to implement the Bottom Navigation component from Material Design guidelines (minSdkVersion=16).
