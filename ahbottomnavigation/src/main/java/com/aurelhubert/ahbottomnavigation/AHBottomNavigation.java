@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AHBottomNavigationLayout
@@ -549,7 +550,7 @@ public class AHBottomNavigation extends FrameLayout {
 	/**
 	 * Add all items
 	 */
-	public void addItems(ArrayList<AHBottomNavigationItem> items) {
+	public void addItems(List<AHBottomNavigationItem> items) {
 		if (items.size() >= MAX_ITEMS || (this.items.size() + items.size()) > MAX_ITEMS) {
 			Log.w(TAG, "The items list should not have more than 5 items");
 		}
