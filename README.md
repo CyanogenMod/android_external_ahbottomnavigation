@@ -1,9 +1,14 @@
 
 # AHBottomNavigation
-Library to implement the Bottom Navigation component from Material Design guidelines (minSdkVersion=16).
+Library to implement the Bottom Navigation component from Material Design guidelines (minSdkVersion=14).
 
 ## Demo
-<img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="278" height="492" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="278" height="492" />
+<img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo4.gif" width="208" height="368" />
+
+## What's new (1.0.1)
+* Bug fixes
+* Notifications
+* Minimum SDK version: 14
 
 ## Features
 
@@ -12,13 +17,14 @@ Library to implement the Bottom Navigation component from Material Design guidel
 * Choose your style: Classic or colored navigation
 * Add a OnTabSelectedListener to detect tab selection
 * Support icon font color with "setForceTint(true)"
+* Manage notififcations for each item
 
 ## How to?
 
 ### Gradle
 ```groovy
 dependencies {
-    compile 'com.aurelhubert:ahbottomnavigation:0.1.6'
+    compile 'com.aurelhubert:ahbottomnavigation:1.0.1'
 }
 ```
 ### XML
@@ -81,6 +87,13 @@ bottomNavigation.setColored(true);
 
 // Set current item programmatically
 bottomNavigation.setCurrentItem(1);
+
+// Customize notification (title, background, typeface)
+bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
+
+// Add or remove notification for each item
+bottomNavigation.setNotification(4, 1);
+bottomNavigation.setNotification(0, 1);
 
 // Set listener
 bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {

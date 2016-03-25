@@ -8,6 +8,7 @@ import android.content.ContextWrapper;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -31,32 +32,53 @@ public class AHHelper {
 	 * @param forceTint
 	 * @return
 	 */
-	public static Drawable getTintDrawable(Drawable drawable, int color, boolean forceTint) {
+	public static Drawable getTintDrawable(Drawable drawable, @ColorInt int color, boolean forceTint) {
 		if (forceTint) {
 			drawable.clearColorFilter();
 			drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 			drawable.invalidateSelf();
 			return drawable;
 		}
-		Drawable wrapDrawable = DrawableCompat.wrap(drawable);
+		Drawable wrapDrawable = DrawableCompat.wrap(drawable).mutate();
 		DrawableCompat.setTint(wrapDrawable, color);
 		return wrapDrawable;
 	}
 
 	/**
-	 * Update top padding with animation
+	 * Update top margin with animation
 	 */
-	public static void updateTopPadding(final View view, int fromPadding, int toPadding) {
-		ValueAnimator animator = ValueAnimator.ofFloat(fromPadding, toPadding);
+	public static void updateTopMargin(final View view, int fromMargin, int toMargin) {
+		ValueAnimator animator = ValueAnimator.ofFloat(fromMargin, toMargin);
 		animator.setDuration(150);
 		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator valueAnimator) {
 				float animatedValue = (float) valueAnimator.getAnimatedValue();
-				view.setPadding(view.getPaddingLeft(),
-						(int) animatedValue,
-						view.getPaddingRight(),
-						view.getPaddingBottom());
+				if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+					ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+					p.setMargins(p.leftMargin, (int) animatedValue, p.rightMargin, p.bottomMargin);
+					view.requestLayout();
+				}
+			}
+		});
+		animator.start();
+	}
+
+	/**
+	 * Update left margin with animation
+	 */
+	public static void updateLeftMargin(final View view, int fromMargin, int toMargin) {
+		ValueAnimator animator = ValueAnimator.ofFloat(fromMargin, toMargin);
+		animator.setDuration(150);
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator valueAnimator) {
+				float animatedValue = (float) valueAnimator.getAnimatedValue();
+				if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+					ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+					p.setMargins((int) animatedValue, p.topMargin, p.rightMargin, p.bottomMargin);
+					view.requestLayout();
+				}
 			}
 		});
 		animator.start();
@@ -97,7 +119,8 @@ public class AHHelper {
 	/**
 	 * Update text color with animation
 	 */
-	public static void updateTextColor(final TextView textView, int fromColor, int toColor) {
+	public static void updateTextColor(final TextView textView, @ColorInt int fromColor,
+	                                   @ColorInt int toColor) {
 		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
 		colorAnimation.setDuration(150);
 		colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -112,7 +135,8 @@ public class AHHelper {
 	/**
 	 * Update text color with animation
 	 */
-	public static void updateViewBackgroundColor(final View view, int fromColor, int toColor) {
+	public static void updateViewBackgroundColor(final View view, @ColorInt int fromColor,
+	                                             @ColorInt int toColor) {
 		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
 		colorAnimation.setDuration(150);
 		colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -128,8 +152,8 @@ public class AHHelper {
 	 * Update image view color with animation
 	 */
 	public static void updateDrawableColor(final Context context, final Drawable drawable,
-	                                       final ImageView imageView, int fromColor, int toColor,
-	                                       final boolean forceTint) {
+	                                       final ImageView imageView, @ColorInt int fromColor,
+	                                       @ColorInt int toColor, final boolean forceTint) {
 		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
 		colorAnimation.setDuration(150);
 		colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

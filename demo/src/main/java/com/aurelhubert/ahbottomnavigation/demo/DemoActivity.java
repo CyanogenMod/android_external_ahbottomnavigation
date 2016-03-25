@@ -1,8 +1,9 @@
-package aurelhubert.com.ahbottomnavigation;
+package com.aurelhubert.ahbottomnavigation.demo;
 
 import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
@@ -40,13 +41,19 @@ public class DemoActivity extends AppCompatActivity {
 		bottomNavigationItems.add(item2);
 		bottomNavigationItems.add(item3);
 
-
 		bottomNavigation.addItems(bottomNavigationItems);
 		bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
 		bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
+		bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
+
 		bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(int position, boolean wasSelected) {
+
+				if (position == 1) {
+					bottomNavigation.setNotification(0, 1);
+				}
+
 				if (!wasSelected) {
 					currentFragment = DemoFragment.newInstance(position);
 					fragmentManager.beginTransaction()
@@ -63,6 +70,14 @@ public class DemoActivity extends AppCompatActivity {
 		fragmentManager.beginTransaction()
 				.replace(R.id.fragment_container, currentFragment)
 				.commit();
+
+		Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				bottomNavigation.setNotification(4, 1);
+			}
+		}, 2000);
 	}
 
 	/**
@@ -84,7 +99,6 @@ public class DemoActivity extends AppCompatActivity {
 	 */
 	public void updateBottomNavigationItems(boolean addItems) {
 
-
 		AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.tab_4),
 				ContextCompat.getDrawable(this, R.drawable.ic_maps_local_bar),
 				ContextCompat.getColor(this, R.color.color_tab_4));
@@ -95,6 +109,7 @@ public class DemoActivity extends AppCompatActivity {
 		if (addItems) {
 			bottomNavigation.addItem(item4);
 			bottomNavigation.addItem(item5);
+			bottomNavigation.setNotification(1, 3);
 		} else {
 			bottomNavigation.removeAllItems();
 			bottomNavigation.addItems(bottomNavigationItems);

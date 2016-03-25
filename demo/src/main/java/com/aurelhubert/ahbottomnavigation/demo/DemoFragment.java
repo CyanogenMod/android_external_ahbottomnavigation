@@ -1,4 +1,4 @@
-package aurelhubert.com.ahbottomnavigation;
+package com.aurelhubert.ahbottomnavigation.demo;
 
 import android.app.Fragment;
 import android.os.Bundle;

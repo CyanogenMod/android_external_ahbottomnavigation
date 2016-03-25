@@ -1,4 +1,4 @@
-package aurelhubert.com.ahbottomnavigation;
+package com.aurelhubert.ahbottomnavigation.demo;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

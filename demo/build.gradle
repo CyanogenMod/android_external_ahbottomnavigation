@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "aurelhubert.com.ahbottomnavigation"
+        applicationId "com.aurelhubert.ahbottomnavigation.demo"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
