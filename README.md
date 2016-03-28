@@ -11,7 +11,6 @@ Library to implement the Bottom Navigation component from Material Design guidel
 * Minimum SDK version: 14
 
 ## Features
-
 * Follow the bottom navigation guidelines (https://www.google.com/design/spec/components/bottom-navigation.html)
 * Add 3 to 5 items (with title, icon & color)
 * Choose your style: Classic or colored navigation
