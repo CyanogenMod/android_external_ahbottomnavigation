@@ -75,7 +75,7 @@ public class DemoActivity extends AppCompatActivity {
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				bottomNavigation.setNotification(4, 1);
+				bottomNavigation.setNotification(16, 1);
 			}
 		}, 2000);
 	}

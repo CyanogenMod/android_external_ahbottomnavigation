@@ -570,6 +570,10 @@ public class AHBottomNavigation extends FrameLayout {
 		float textSizeMin = getResources().getDimension(R.dimen.bottom_navigation_notification_text_size_min);
 		for (int i = 0; i < views.size(); i++) {
 			TextView notification = (TextView) views.get(i).findViewById(R.id.bottom_navigation_notification);
+
+			String currentValue = notification.getText().toString();
+			boolean animate = !currentValue.equals(String.valueOf(notifications[i]));
+
 			if (updateStyle) {
 				notification.setTextColor(notificationTextColor);
 				if (notificationTypeface != null) {
@@ -598,12 +602,14 @@ public class AHBottomNavigation extends FrameLayout {
 
 			if (notifications[i] == 0 && notification.getText().length() > 0) {
 				notification.setText("");
-				notification.animate()
-						.scaleX(0)
-						.scaleY(0)
-						.alpha(0)
-						.setDuration(150)
-						.start();
+				if (animate) {
+					notification.animate()
+							.scaleX(0)
+							.scaleY(0)
+							.alpha(0)
+							.setDuration(150)
+							.start();
+				}
 			} else if (notifications[i] > 0) {
 				if (notifications[i] >= 100) {
 					notification.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMin);
@@ -612,14 +618,16 @@ public class AHBottomNavigation extends FrameLayout {
 					notification.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 					notification.setText(String.valueOf(notifications[i]));
 				}
-				notification.setScaleX(0);
-				notification.setScaleY(0);
-				notification.animate()
-						.scaleX(1)
-						.scaleY(1)
-						.alpha(1)
-						.setDuration(150)
-						.start();
+				if (animate) {
+					notification.setScaleX(0);
+					notification.setScaleY(0);
+					notification.animate()
+							.scaleX(1)
+							.scaleY(1)
+							.alpha(1)
+							.setDuration(150)
+							.start();
+				}
 			}
 		}
 	}
@@ -773,7 +781,7 @@ public class AHBottomNavigation extends FrameLayout {
 		if (views.size() == 0) {
 			currentItem = position;
 		} else {
-			if (items.size() == MIN_ITEMS) {
+			if (items.size() == MIN_ITEMS || forceTitlesDisplay) {
 				updateItems(position);
 			} else {
 				updateSmallItems(position);
