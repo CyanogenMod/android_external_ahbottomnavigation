@@ -823,7 +823,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set the force tint value
-	 * If forceTint = true, the tint is made with drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+	 * If forceTint = true, the tint is made with drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
 	 *
 	 * @param forceTint Boolean
 	 */

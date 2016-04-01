@@ -35,7 +35,7 @@ public class AHHelper {
 	public static Drawable getTintDrawable(Drawable drawable, @ColorInt int color, boolean forceTint) {
 		if (forceTint) {
 			drawable.clearColorFilter();
-			drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+			drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
 			drawable.invalidateSelf();
 			return drawable;
 		}
