@@ -136,12 +136,15 @@ public class AHBottomNavigation extends FrameLayout {
 		} else if (items.size() > MAX_ITEMS) {
 			Log.w(TAG, "The items list should not have more than 5 items");
 		}
+
+		int layoutHeight = (int) resources.getDimension(R.dimen.bottom_navigation_height);
+
 		removeAllViews();
 		views.clear();
 		backgroundColorView = new View(context);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			LayoutParams backgroundLayoutParams = new LayoutParams(
-					ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+					ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
 			addView(backgroundColorView, backgroundLayoutParams);
 		}
 
@@ -149,7 +152,6 @@ public class AHBottomNavigation extends FrameLayout {
 		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 		linearLayout.setGravity(Gravity.CENTER);
 
-		int layoutHeight = (int) resources.getDimension(R.dimen.bottom_navigation_height);
 		LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
 		addView(linearLayout, layoutParams);
 
@@ -422,6 +424,7 @@ public class AHBottomNavigation extends FrameLayout {
 							items.get(itemIndex).getColor(context));
 				} else {
 					setBackgroundColor(defaultBackgroundColor);
+					backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 				}
 
 			} else if (i == currentItem) {
@@ -519,6 +522,7 @@ public class AHBottomNavigation extends FrameLayout {
 							items.get(itemIndex).getColor(context));
 				} else {
 					setBackgroundColor(defaultBackgroundColor);
+					backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 				}
 
 			} else if (i == currentItem) {
@@ -937,6 +941,7 @@ public class AHBottomNavigation extends FrameLayout {
 		notificationTypeface = typeface;
 		updateNotifications(true);
 	}
+
 
 	////////////////
 	// INTERFACES //
