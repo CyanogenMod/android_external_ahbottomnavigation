@@ -50,6 +50,7 @@ public class AHBottomNavigation extends FrameLayout {
 	private View backgroundColorView;
 	private boolean colored = false;
 	private int[] notifications = {0, 0, 0, 0, 0};
+    private boolean isBehaviorTranslationSet = false;
 
 	private int defaultBackgroundColor = Color.WHITE;
 	private int accentColor = Color.WHITE;
@@ -69,34 +70,19 @@ public class AHBottomNavigation extends FrameLayout {
 	private Typeface notificationTypeface;
 
 
-	/**
-	 * Constructor
-	 *
-	 * @param context
-	 */
 	public AHBottomNavigation(Context context) {
 		super(context);
-		this.context = context;
-		init();
+		init(context);
 	}
 
 	public AHBottomNavigation(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.context = context;
-		init();
+		init(context);
 	}
 
 	public AHBottomNavigation(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		this.context = context;
-		init();
-	}
-
-
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		initViews();
+		init(context);
 	}
 
 	@Override
@@ -105,54 +91,53 @@ public class AHBottomNavigation extends FrameLayout {
 		createItems();
 	}
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if(!isBehaviorTranslationSet){
+            //The translation behavior has to be set up after the super.onMeasure has been called.
+            setBehaviorTranslationEnabled(behaviorTranslationEnabled);
+            isBehaviorTranslationSet = true;
+        }
+    }
 
-	/////////////
+    /////////////
 	// PRIVATE //
 	/////////////
 
 	/**
 	 * Init
+	 * @param context
 	 */
-	private void init() {
-		resources = context.getResources();
-		accentColor = ContextCompat.getColor(context, R.color.colorAccent);
-		inactiveColor = ContextCompat.getColor(context, R.color.colorInactive);
-		notificationTextColor = ContextCompat.getColor(context, android.R.color.white);
-	}
-
-	/**
-	 * Init
-	 */
-	private void initViews() {
-
+	private void init(Context context) {
+		this.context = context;
+		resources = this.context.getResources();
+		accentColor = ContextCompat.getColor(this.context, R.color.colorAccent);
+		inactiveColor = ContextCompat.getColor(this.context, R.color.colorInactive);
+		notificationTextColor = ContextCompat.getColor(this.context, android.R.color.white);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			setElevation(resources.getDimension(R.dimen.bottom_navigation_elevation));
 			setClipToPadding(false);
 		}
 
-		ViewGroup.LayoutParams params = getLayoutParams();
-		params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-		params.height = (int) resources.getDimension(R.dimen.bottom_navigation_height);
-		if (getParent() instanceof CoordinatorLayout && behaviorTranslationEnabled) {
-			((CoordinatorLayout.LayoutParams) params).setBehavior(new AHBottomNavigationBehavior());
-		}
-		setLayoutParams(params);
-
-		if (items.size() < MIN_ITEMS) {
-			Log.w(TAG, "The items list should have at least 3 items");
-		} else if (items.size() > MAX_ITEMS) {
-			Log.w(TAG, "The items list should not have more than 5 items");
-		}
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                (int) resources.getDimension(R.dimen.bottom_navigation_height)
+        );
+        setLayoutParams(params);
 	}
 
 	/**
 	 * Create the items in the bottom navigation
 	 */
 	private void createItems() {
-
+		if (items.size() < MIN_ITEMS) {
+			Log.w(TAG, "The items list should have at least 3 items");
+		} else if (items.size() > MAX_ITEMS) {
+			Log.w(TAG, "The items list should not have more than 5 items");
+		}
 		removeAllViews();
 		views.clear();
-
 		backgroundColorView = new View(context);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
 			LayoutParams backgroundLayoutParams = new LayoutParams(
