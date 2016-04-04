@@ -2,6 +2,7 @@ package com.aurelhubert.ahbottomnavigation;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -43,11 +44,13 @@ public class AHBottomNavigation extends FrameLayout {
 
 	// Variables
 	private Context context;
+	private Resources resources;
 	private ArrayList<AHBottomNavigationItem> items = new ArrayList<>();
 	private ArrayList<View> views = new ArrayList<>();
 	private View backgroundColorView;
 	private boolean colored = false;
 	private int[] notifications = {0, 0, 0, 0, 0};
+    private boolean isBehaviorTranslationSet = false;
 
 	private int defaultBackgroundColor = Color.WHITE;
 	private int accentColor = Color.WHITE;
@@ -67,34 +70,19 @@ public class AHBottomNavigation extends FrameLayout {
 	private Typeface notificationTypeface;
 
 
-	/**
-	 * Constructor
-	 *
-	 * @param context
-	 */
 	public AHBottomNavigation(Context context) {
 		super(context);
-		this.context = context;
-		init();
+		init(context);
 	}
 
 	public AHBottomNavigation(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.context = context;
-		init();
+		init(context);
 	}
 
 	public AHBottomNavigation(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		this.context = context;
-		init();
-	}
-
-
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		initViews();
+		init(context);
 	}
 
 	@Override
@@ -103,53 +91,53 @@ public class AHBottomNavigation extends FrameLayout {
 		createItems();
 	}
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if(!isBehaviorTranslationSet){
+            //The translation behavior has to be set up after the super.onMeasure has been called.
+            setBehaviorTranslationEnabled(behaviorTranslationEnabled);
+            isBehaviorTranslationSet = true;
+        }
+    }
 
-	/////////////
+    /////////////
 	// PRIVATE //
 	/////////////
 
 	/**
 	 * Init
+	 * @param context
 	 */
-	private void init() {
-		accentColor = ContextCompat.getColor(context, R.color.colorAccent);
-		inactiveColor = ContextCompat.getColor(context, R.color.colorInactive);
-		notificationTextColor = ContextCompat.getColor(context, android.R.color.white);
-	}
-
-	/**
-	 * Init
-	 */
-	private void initViews() {
-
+	private void init(Context context) {
+		this.context = context;
+		resources = this.context.getResources();
+		accentColor = ContextCompat.getColor(this.context, R.color.colorAccent);
+		inactiveColor = ContextCompat.getColor(this.context, R.color.colorInactive);
+		notificationTextColor = ContextCompat.getColor(this.context, android.R.color.white);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			setElevation(context.getResources().getDimension(R.dimen.bottom_navigation_elevation));
+			setElevation(resources.getDimension(R.dimen.bottom_navigation_elevation));
 			setClipToPadding(false);
 		}
 
-		ViewGroup.LayoutParams params = getLayoutParams();
-		params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-		params.height = (int) context.getResources().getDimension(R.dimen.bottom_navigation_height);
-		if (getParent() instanceof CoordinatorLayout && behaviorTranslationEnabled) {
-			((CoordinatorLayout.LayoutParams) params).setBehavior(new AHBottomNavigationBehavior());
-		}
-		setLayoutParams(params);
-
-		if (items.size() < MIN_ITEMS) {
-			Log.w(TAG, "The items list should have at least 3 items");
-		} else if (items.size() > MAX_ITEMS) {
-			Log.w(TAG, "The items list should not have more than 5 items");
-		}
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                (int) resources.getDimension(R.dimen.bottom_navigation_height)
+        );
+        setLayoutParams(params);
 	}
 
 	/**
 	 * Create the items in the bottom navigation
 	 */
 	private void createItems() {
-
+		if (items.size() < MIN_ITEMS) {
+			Log.w(TAG, "The items list should have at least 3 items");
+		} else if (items.size() > MAX_ITEMS) {
+			Log.w(TAG, "The items list should not have more than 5 items");
+		}
 		removeAllViews();
 		views.clear();
-
 		backgroundColorView = new View(context);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
 			LayoutParams backgroundLayoutParams = new LayoutParams(
@@ -161,7 +149,7 @@ public class AHBottomNavigation extends FrameLayout {
 		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 		linearLayout.setGravity(Gravity.CENTER);
 
-		int layoutHeight = (int) context.getResources().getDimension(R.dimen.bottom_navigation_height);
+		int layoutHeight = (int) resources.getDimension(R.dimen.bottom_navigation_height);
 		LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
 		addView(linearLayout, layoutParams);
 
@@ -181,13 +169,13 @@ public class AHBottomNavigation extends FrameLayout {
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		float height = context.getResources().getDimension(R.dimen.bottom_navigation_height);
-		float minWidth = context.getResources().getDimension(R.dimen.bottom_navigation_min_width);
-		float maxWidth = context.getResources().getDimension(R.dimen.bottom_navigation_max_width);
+		float height = resources.getDimension(R.dimen.bottom_navigation_height);
+		float minWidth = resources.getDimension(R.dimen.bottom_navigation_min_width);
+		float maxWidth = resources.getDimension(R.dimen.bottom_navigation_max_width);
 
 		if (forceTitlesDisplay && items.size() > MIN_ITEMS) {
-			minWidth = context.getResources().getDimension(R.dimen.bottom_navigation_small_inactive_min_width);
-			maxWidth = context.getResources().getDimension(R.dimen.bottom_navigation_small_inactive_max_width);
+			minWidth = resources.getDimension(R.dimen.bottom_navigation_small_inactive_min_width);
+			maxWidth = resources.getDimension(R.dimen.bottom_navigation_small_inactive_max_width);
 		}
 
 		int layoutWidth = getWidth();
@@ -202,11 +190,11 @@ public class AHBottomNavigation extends FrameLayout {
 			itemWidth = maxWidth;
 		}
 
-		float activeSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_active);
-		float inactiveSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_inactive);
+		float activeSize = resources.getDimension(R.dimen.bottom_navigation_text_size_active);
+		float inactiveSize = resources.getDimension(R.dimen.bottom_navigation_text_size_inactive);
 		if (forceTitlesDisplay && items.size() > MIN_ITEMS) {
-			activeSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_forced_active);
-			inactiveSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_forced_inactive);
+			activeSize = resources.getDimension(R.dimen.bottom_navigation_text_size_forced_active);
+			inactiveSize = resources.getDimension(R.dimen.bottom_navigation_text_size_forced_inactive);
 		}
 
 		for (int i = 0; i < items.size(); i++) {
@@ -226,7 +214,7 @@ public class AHBottomNavigation extends FrameLayout {
 			}
 
 			if (i == currentItem) {
-				int activePaddingTop = (int) context.getResources()
+				int activePaddingTop = (int) resources
 						.getDimension(R.dimen.bottom_navigation_margin_top_active);
 				if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
 					ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) icon.getLayoutParams();
@@ -280,9 +268,9 @@ public class AHBottomNavigation extends FrameLayout {
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		float height = context.getResources().getDimension(R.dimen.bottom_navigation_height);
-		float minWidth = context.getResources().getDimension(R.dimen.bottom_navigation_small_inactive_min_width);
-		float maxWidth = context.getResources().getDimension(R.dimen.bottom_navigation_small_inactive_max_width);
+		float height = resources.getDimension(R.dimen.bottom_navigation_height);
+		float minWidth = resources.getDimension(R.dimen.bottom_navigation_small_inactive_min_width);
+		float maxWidth = resources.getDimension(R.dimen.bottom_navigation_small_inactive_max_width);
 
 		int layoutWidth = getWidth();
 		if (layoutWidth == 0 || items.size() == 0) {
@@ -297,7 +285,7 @@ public class AHBottomNavigation extends FrameLayout {
 			itemWidth = maxWidth;
 		}
 
-		float difference = context.getResources().getDimension(R.dimen.bottom_navigation_small_selected_width_difference);
+		float difference = resources.getDimension(R.dimen.bottom_navigation_small_selected_width_difference);
 		selectedItemWidth = itemWidth + items.size() * difference;
 		itemWidth -= difference;
 		notSelectedItemWidth = itemWidth;
@@ -314,7 +302,7 @@ public class AHBottomNavigation extends FrameLayout {
 			title.setText(item.getTitle(context));
 
 			if (i == currentItem) {
-				int activeMarginTop = (int) context.getResources()
+				int activeMarginTop = (int) resources
 						.getDimension(R.dimen.bottom_navigation_small_margin_top_active);
 				if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
 					ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) icon.getLayoutParams();
@@ -372,15 +360,15 @@ public class AHBottomNavigation extends FrameLayout {
 			return;
 		}
 
-		int activeMarginTop = (int) context.getResources().getDimension(R.dimen.bottom_navigation_margin_top_active);
-		int inactiveMarginTop = (int) context.getResources().getDimension(R.dimen.bottom_navigation_margin_top_inactive);
-		int notificationActiveMarginLeft = (int) context.getResources().getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
-		int notificationInactiveMarginLeft = (int) context.getResources().getDimension(R.dimen.bottom_navigation_notification_margin_left);
-		float activeSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_active);
-		float inactiveSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_inactive);
+		int activeMarginTop = (int) resources.getDimension(R.dimen.bottom_navigation_margin_top_active);
+		int inactiveMarginTop = (int) resources.getDimension(R.dimen.bottom_navigation_margin_top_inactive);
+		int notificationActiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
+		int notificationInactiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left);
+		float activeSize = resources.getDimension(R.dimen.bottom_navigation_text_size_active);
+		float inactiveSize = resources.getDimension(R.dimen.bottom_navigation_text_size_inactive);
 		if (forceTitlesDisplay && items.size() > MIN_ITEMS) {
-			activeSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_forced_active);
-			inactiveSize = context.getResources().getDimension(R.dimen.bottom_navigation_text_size_forced_inactive);
+			activeSize = resources.getDimension(R.dimen.bottom_navigation_text_size_forced_active);
+			inactiveSize = resources.getDimension(R.dimen.bottom_navigation_text_size_forced_inactive);
 		}
 
 		int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
@@ -474,10 +462,10 @@ public class AHBottomNavigation extends FrameLayout {
 			return;
 		}
 
-		int activeMarginTop = (int) context.getResources().getDimension(R.dimen.bottom_navigation_small_margin_top_active);
-		int inactiveMargin = (int) context.getResources().getDimension(R.dimen.bottom_navigation_small_margin_top);
-		int notificationActiveMarginLeft = (int) context.getResources().getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
-		int notificationInactiveMarginLeft = (int) context.getResources().getDimension(R.dimen.bottom_navigation_notification_margin_left);
+		int activeMarginTop = (int) resources.getDimension(R.dimen.bottom_navigation_small_margin_top_active);
+		int inactiveMargin = (int) resources.getDimension(R.dimen.bottom_navigation_small_margin_top);
+		int notificationActiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
+		int notificationInactiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left);
 		int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
 				accentColor;
 		int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorInactiveSmall) :
@@ -566,8 +554,8 @@ public class AHBottomNavigation extends FrameLayout {
 	 * Update notifications
 	 */
 	private void updateNotifications(boolean updateStyle) {
-		float textSize = getResources().getDimension(R.dimen.bottom_navigation_notification_text_size);
-		float textSizeMin = getResources().getDimension(R.dimen.bottom_navigation_notification_text_size_min);
+		float textSize = resources.getDimension(R.dimen.bottom_navigation_notification_text_size);
+		float textSizeMin = resources.getDimension(R.dimen.bottom_navigation_notification_text_size_min);
 		for (int i = 0; i < views.size(); i++) {
 			TextView notification = (TextView) views.get(i).findViewById(R.id.bottom_navigation_notification);
 
