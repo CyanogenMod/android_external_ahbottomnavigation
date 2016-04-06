@@ -11,6 +11,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -121,10 +122,8 @@ public class AHBottomNavigation extends FrameLayout {
 		accentColor = ContextCompat.getColor(this.context, R.color.colorAccent);
 		inactiveColor = ContextCompat.getColor(this.context, R.color.colorInactive);
 		notificationTextColor = ContextCompat.getColor(this.context, android.R.color.white);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			setElevation(resources.getDimension(R.dimen.bottom_navigation_elevation));
-			setClipToPadding(false);
-		}
+		ViewCompat.setElevation(this, resources.getDimension(R.dimen.bottom_navigation_elevation));
+		setClipToPadding(false);
 
 		ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT,
@@ -987,10 +986,9 @@ public class AHBottomNavigation extends FrameLayout {
 	 * @param useElevation boolean
 	 */
 	public void setUseElevation(boolean useElevation) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			setElevation(useElevation ? resources.getDimension(R.dimen.bottom_navigation_elevation) : 0);
-			setClipToPadding(false);
-		}
+		ViewCompat.setElevation(this, useElevation ?
+					resources.getDimension(R.dimen.bottom_navigation_elevation) : 0);
+		setClipToPadding(false);
 	}
 
 	////////////////
