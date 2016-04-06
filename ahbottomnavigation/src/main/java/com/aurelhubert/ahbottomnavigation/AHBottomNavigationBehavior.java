@@ -8,6 +8,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -51,6 +52,16 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	}
 
 	@Override
+	public boolean onDependentViewChanged(CoordinatorLayout parent, V child, View dependency) {
+		return super.onDependentViewChanged(parent, child, dependency);
+	}
+
+	@Override
+	public void onDependentViewRemoved(CoordinatorLayout parent, V child, View dependency) {
+		super.onDependentViewRemoved(parent, child, dependency);
+	}
+
+	@Override
 	public void onNestedVerticalOverScroll(CoordinatorLayout coordinatorLayout, V child, @ScrollDirection int direction, int currentOverScroll, int totalOverScroll) {
 	}
 
@@ -58,6 +69,7 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	public void onDirectionNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx, int dy, int[] consumed, @ScrollDirection int scrollDirection) {
 		handleDirection(child, scrollDirection);
 	}
+
 
 	private void handleDirection(V child, int scrollDirection) {
 		if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_DOWN && hidden) {
@@ -87,7 +99,6 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 			ViewCompat.animate(mTabsHolder).alpha(offset).setDuration(300).start();
 		}
 	}
-
 
 	private void ensureOrCancelAnimator(V child) {
 		if (mTranslationAnimator == null) {
@@ -121,5 +132,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 
 	public void setTabLayoutId(int tabId) {
 		this.mTabLayoutId = tabId;
+	}
+
+	public void resetOffset(V view) {
+		Log.d("AHBottomNavigation", "restoreBottomNavigation");
+		animateOffset(view, 0);
 	}
 }

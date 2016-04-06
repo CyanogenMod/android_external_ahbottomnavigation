@@ -47,6 +47,7 @@ public class AHBottomNavigation extends FrameLayout {
 	private Resources resources;
 	private ArrayList<AHBottomNavigationItem> items = new ArrayList<>();
 	private ArrayList<View> views = new ArrayList<>();
+	private AHBottomNavigationBehavior<AHBottomNavigation> bottomNavigationBehavior;
 	private View backgroundColorView;
 	private boolean colored = false;
 	private int[] notifications = {0, 0, 0, 0, 0};
@@ -799,8 +800,18 @@ public class AHBottomNavigation extends FrameLayout {
 		this.behaviorTranslationEnabled = behaviorTranslationEnabled;
 		if (getParent() instanceof CoordinatorLayout) {
 			ViewGroup.LayoutParams params = getLayoutParams();
-			((CoordinatorLayout.LayoutParams) params).setBehavior(behaviorTranslationEnabled ?
-					new AHBottomNavigationBehavior() : null);
+			bottomNavigationBehavior = behaviorTranslationEnabled ?
+					new AHBottomNavigationBehavior<AHBottomNavigation>() : null;
+			((CoordinatorLayout.LayoutParams) params).setBehavior(bottomNavigationBehavior);
+		}
+	}
+
+	/**
+	 * Restore Bottom Navigation
+	 */
+	public void restoreBottomNavigation() {
+		if (bottomNavigationBehavior != null) {
+			bottomNavigationBehavior.resetOffset(this);
 		}
 	}
 
