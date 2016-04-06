@@ -51,7 +51,7 @@ public class AHBottomNavigation extends FrameLayout {
 	private View backgroundColorView;
 	private boolean colored = false;
 	private int[] notifications = {0, 0, 0, 0, 0};
-    private boolean isBehaviorTranslationSet = false;
+	private boolean isBehaviorTranslationSet = false;
 
 	private int defaultBackgroundColor = Color.WHITE;
 	private int accentColor = Color.WHITE;
@@ -65,8 +65,12 @@ public class AHBottomNavigation extends FrameLayout {
 	private boolean forceTitlesDisplay = false;
 
 	// Notifications
-	private @ColorInt int notificationTextColor;
-	private @ColorInt int notificationBackgroundColor;
+	private
+	@ColorInt
+	int notificationTextColor;
+	private
+	@ColorInt
+	int notificationBackgroundColor;
 	private Drawable notificationBackgroundDrawable;
 	private Typeface notificationTypeface;
 
@@ -92,22 +96,23 @@ public class AHBottomNavigation extends FrameLayout {
 		createItems();
 	}
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if(!isBehaviorTranslationSet){
-            //The translation behavior has to be set up after the super.onMeasure has been called.
-            setBehaviorTranslationEnabled(behaviorTranslationEnabled);
-            isBehaviorTranslationSet = true;
-        }
-    }
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		if (!isBehaviorTranslationSet) {
+			//The translation behavior has to be set up after the super.onMeasure has been called.
+			setBehaviorTranslationEnabled(behaviorTranslationEnabled);
+			isBehaviorTranslationSet = true;
+		}
+	}
 
-    /////////////
+	/////////////
 	// PRIVATE //
 	/////////////
 
 	/**
 	 * Init
+	 *
 	 * @param context
 	 */
 	private void init(Context context) {
@@ -121,11 +126,11 @@ public class AHBottomNavigation extends FrameLayout {
 			setClipToPadding(false);
 		}
 
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) resources.getDimension(R.dimen.bottom_navigation_height)
-        );
-        setLayoutParams(params);
+		ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				(int) resources.getDimension(R.dimen.bottom_navigation_height)
+		);
+		setLayoutParams(params);
 	}
 
 	/**
@@ -250,7 +255,7 @@ public class AHBottomNavigation extends FrameLayout {
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					updateItems(itemIndex);
+					updateItems(itemIndex, true);
 				}
 			});
 
@@ -337,11 +342,11 @@ public class AHBottomNavigation extends FrameLayout {
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					updateSmallItems(itemIndex);
+					updateSmallItems(itemIndex, true);
 				}
 			});
 
-			LayoutParams params = new LayoutParams( i == currentItem ? (int) selectedItemWidth :
+			LayoutParams params = new LayoutParams(i == currentItem ? (int) selectedItemWidth :
 					(int) itemWidth, (int) height);
 			linearLayout.addView(view, params);
 			views.add(view);
@@ -353,8 +358,11 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Update Items UI
+	 *
+	 * @param itemIndex   int: Selected item position
+	 * @param useCallback boolean: Use or not the callback
 	 */
-	private void updateItems(final int itemIndex) {
+	private void updateItems(final int itemIndex, boolean useCallback) {
 
 		if (currentItem == itemIndex) {
 			if (tabSelectedListener != null) {
@@ -446,18 +454,21 @@ public class AHBottomNavigation extends FrameLayout {
 		currentItem = itemIndex;
 		currentColor = items.get(currentItem).getColor(context);
 
-		if (listener != null) {
+		if (listener != null && useCallback) {
 			listener.onTabSelected(itemIndex);
 		}
-		if (tabSelectedListener != null) {
+		if (tabSelectedListener != null && useCallback) {
 			tabSelectedListener.onTabSelected(itemIndex, false);
 		}
 	}
 
 	/**
 	 * Update Small items UI
+	 *
+	 * @param itemIndex   int: Selected item position
+	 * @param useCallback boolean: Use or not the callback
 	 */
-	private void updateSmallItems(final int itemIndex) {
+	private void updateSmallItems(final int itemIndex, boolean useCallback) {
 
 		if (currentItem == itemIndex) {
 			if (tabSelectedListener != null) {
@@ -547,10 +558,10 @@ public class AHBottomNavigation extends FrameLayout {
 		currentItem = itemIndex;
 		currentColor = items.get(currentItem).getColor(context);
 
-		if (listener != null) {
+		if (listener != null && useCallback) {
 			listener.onTabSelected(itemIndex);
 		}
-		if (tabSelectedListener != null) {
+		if (tabSelectedListener != null && useCallback) {
 			tabSelectedListener.onTabSelected(itemIndex, false);
 		}
 	}
@@ -764,9 +775,19 @@ public class AHBottomNavigation extends FrameLayout {
 	/**
 	 * Set the current item
 	 *
-	 * @param position The new position
+	 * @param position int: position
 	 */
 	public void setCurrentItem(int position) {
+		setCurrentItem(position, true);
+	}
+
+	/**
+	 * Set the current item
+	 *
+	 * @param position    int: item
+	 * @param useCallback boolean: use or not the callback
+	 */
+	public void setCurrentItem(int position, boolean useCallback) {
 		if (position >= items.size()) {
 			Log.w(TAG, "The position is out of bounds of the items (" + items.size() + " elements)");
 			return;
@@ -775,9 +796,9 @@ public class AHBottomNavigation extends FrameLayout {
 			currentItem = position;
 		} else {
 			if (items.size() == MIN_ITEMS || forceTitlesDisplay) {
-				updateItems(position);
+				updateItems(position, useCallback);
 			} else {
-				updateSmallItems(position);
+				updateSmallItems(position, useCallback);
 			}
 		}
 	}
@@ -887,8 +908,9 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set the notification number
+	 *
 	 * @param nbNotification int
-	 * @param itemPosition int
+	 * @param itemPosition   int
 	 */
 	public void setNotification(int nbNotification, int itemPosition) {
 		if (itemPosition < 0 || itemPosition > items.size() - 1) {
@@ -901,6 +923,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set notification text color
+	 *
 	 * @param textColor int
 	 */
 	public void setNotificationTextColor(@ColorInt int textColor) {
@@ -910,6 +933,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set notification text color
+	 *
 	 * @param textColor int
 	 */
 	public void setNotificationTextColorResource(@ColorRes int textColor) {
@@ -919,6 +943,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set notification background resource
+	 *
 	 * @param drawable Drawable
 	 */
 	public void setNotificationBackground(Drawable drawable) {
@@ -928,6 +953,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set notification background color
+	 *
 	 * @param color int
 	 */
 	public void setNotificationBackgroundColor(@ColorInt int color) {
@@ -937,6 +963,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set notification background color
+	 *
 	 * @param color int
 	 */
 	public void setNotificationBackgroundColorResource(@ColorRes int color) {
@@ -946,6 +973,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set notification typeface
+	 *
 	 * @param typeface Typeface
 	 */
 	public void setNotificationBackgroundColorResource(Typeface typeface) {
@@ -953,6 +981,17 @@ public class AHBottomNavigation extends FrameLayout {
 		updateNotifications(true);
 	}
 
+	/**
+	 * Activate or not the elevation
+	 *
+	 * @param useElevation boolean
+	 */
+	public void setUseElevation(boolean useElevation) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			setElevation(useElevation ? resources.getDimension(R.dimen.bottom_navigation_elevation) : 0);
+			setClipToPadding(false);
+		}
+	}
 
 	////////////////
 	// INTERFACES //
