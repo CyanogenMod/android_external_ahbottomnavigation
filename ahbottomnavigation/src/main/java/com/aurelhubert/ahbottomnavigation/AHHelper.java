@@ -65,6 +65,26 @@ public class AHHelper {
 	}
 
 	/**
+	 * Update bottom margin with animation
+	 */
+	public static void updateBottomMargin(final View view, int fromMargin, int toMargin, int duration) {
+		ValueAnimator animator = ValueAnimator.ofFloat(fromMargin, toMargin);
+		animator.setDuration(duration);
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator valueAnimator) {
+				float animatedValue = (float) valueAnimator.getAnimatedValue();
+				if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+					ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+					p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) animatedValue);
+					view.requestLayout();
+				}
+			}
+		});
+		animator.start();
+	}
+
+	/**
 	 * Update left margin with animation
 	 */
 	public static void updateLeftMargin(final View view, int fromMargin, int toMargin) {

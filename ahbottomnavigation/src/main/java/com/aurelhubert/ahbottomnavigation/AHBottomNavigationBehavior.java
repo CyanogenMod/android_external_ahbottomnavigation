@@ -2,13 +2,15 @@ package com.aurelhubert.ahbottomnavigation;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
+import android.support.v4.view.ViewPropertyAnimatorUpdateListener;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -17,13 +19,18 @@ import android.view.animation.Interpolator;
  * Created by Nikola D. on 3/15/2016.
  */
 public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollingBehavior<V> {
-	
+
 	private static final Interpolator INTERPOLATOR = new LinearOutSlowInInterpolator();
+	private static final int ANIM_DURATION = 300;
+
 	private int mTabLayoutId;
 	private boolean hidden = false;
 	private ViewPropertyAnimatorCompat mTranslationAnimator;
 	private TabLayout mTabLayout;
+	private Snackbar.SnackbarLayout snackbarLayout;
 	private View mTabsHolder;
+	private int mSnackbarHeight = -1;
+	private float targetOffset = 0;
 
 	public AHBottomNavigationBehavior() {
 		super();
@@ -62,6 +69,12 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	}
 
 	@Override
+	public boolean layoutDependsOn(CoordinatorLayout parent, V child, View dependency) {
+		updateSnackbar(child, dependency);
+		return super.layoutDependsOn(parent, child, dependency);
+	}
+
+	@Override
 	public void onNestedVerticalOverScroll(CoordinatorLayout coordinatorLayout, V child, @ScrollDirection int direction, int currentOverScroll, int totalOverScroll) {
 	}
 
@@ -91,19 +104,38 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		ensureOrCancelAnimator(child);
 		mTranslationAnimator.translationY(offset).start();
 		animateTabsHolder(offset);
+		animateSnackBar(offset);
 	}
 
 	private void animateTabsHolder(int offset) {
 		if (mTabsHolder != null) {
 			offset = offset > 0 ? 0 : 1;
-			ViewCompat.animate(mTabsHolder).alpha(offset).setDuration(300).start();
+			ViewCompat.animate(mTabsHolder).alpha(offset).setDuration(ANIM_DURATION).start();
+		}
+	}
+
+	private void animateSnackBar(int offset) {
+		if (snackbarLayout != null) {
+			AHHelper.updateBottomMargin(snackbarLayout, offset > 0 ? 0 : offset,
+					offset > 0 ? offset : 0, ANIM_DURATION);
 		}
 	}
 
 	private void ensureOrCancelAnimator(V child) {
 		if (mTranslationAnimator == null) {
 			mTranslationAnimator = ViewCompat.animate(child);
-			mTranslationAnimator.setDuration(300);
+			mTranslationAnimator.setDuration(ANIM_DURATION);
+			mTranslationAnimator.setUpdateListener(new ViewPropertyAnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(View view) {
+					targetOffset = view.getTranslationY();
+					if (snackbarLayout != null && snackbarLayout.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+						ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) snackbarLayout.getLayoutParams();
+						p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) targetOffset);
+						snackbarLayout.requestLayout();
+					}
+				}
+			});
 			mTranslationAnimator.setInterpolator(INTERPOLATOR);
 		} else {
 			mTranslationAnimator.cancel();
@@ -135,7 +167,33 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	}
 
 	public void resetOffset(V view) {
-		Log.d("AHBottomNavigation", "restoreBottomNavigation");
 		animateOffset(view, 0);
 	}
+
+	/**
+	 * Update Snackbar position
+	 */
+	public void updateSnackbar(View child, View dependency) {
+		if (dependency != null && dependency instanceof Snackbar.SnackbarLayout) {
+
+			snackbarLayout = (Snackbar.SnackbarLayout) dependency;
+
+			if (mSnackbarHeight == -1) {
+				mSnackbarHeight = dependency.getHeight();
+			}
+
+			int targetMargin = (int) (mSnackbarHeight + child.getMeasuredHeight() - child.getTranslationY());
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+				child.bringToFront();
+			}
+
+			if (dependency.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+				ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) dependency.getLayoutParams();
+				p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, targetMargin);
+				dependency.requestLayout();
+			}
+		}
+	}
+
+
 }
