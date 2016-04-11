@@ -791,15 +791,13 @@ public class AHBottomNavigation extends FrameLayout {
 			Log.w(TAG, "The position is out of bounds of the items (" + items.size() + " elements)");
 			return;
 		}
-		if (views.size() == 0) {
-			currentItem = position;
+
+		if (items.size() == MIN_ITEMS || forceTitlesDisplay) {
+			updateItems(position, useCallback);
 		} else {
-			if (items.size() == MIN_ITEMS || forceTitlesDisplay) {
-				updateItems(position, useCallback);
-			} else {
-				updateSmallItems(position, useCallback);
-			}
+			updateSmallItems(position, useCallback);
 		}
+
 	}
 
 	/**
