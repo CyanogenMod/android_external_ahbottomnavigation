@@ -364,7 +364,7 @@ public class AHBottomNavigation extends FrameLayout {
 	private void updateItems(final int itemIndex, boolean useCallback) {
 
 		if (currentItem == itemIndex) {
-			if (tabSelectedListener != null) {
+			if (tabSelectedListener != null && useCallback) {
 				tabSelectedListener.onTabSelected(itemIndex, true);
 			}
 			return;
@@ -470,7 +470,7 @@ public class AHBottomNavigation extends FrameLayout {
 	private void updateSmallItems(final int itemIndex, boolean useCallback) {
 
 		if (currentItem == itemIndex) {
-			if (tabSelectedListener != null) {
+			if (tabSelectedListener != null && useCallback) {
 				tabSelectedListener.onTabSelected(itemIndex, true);
 			}
 			return;
@@ -797,7 +797,6 @@ public class AHBottomNavigation extends FrameLayout {
 		} else {
 			updateSmallItems(position, useCallback);
 		}
-
 	}
 
 	/**

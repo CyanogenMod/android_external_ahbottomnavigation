@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
@@ -16,7 +17,7 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
 /**
- * Created by Nikola D. on 3/15/2016.
+ *
  */
 public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollingBehavior<V> {
 
@@ -28,9 +29,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private ViewPropertyAnimatorCompat mTranslationAnimator;
 	private TabLayout mTabLayout;
 	private Snackbar.SnackbarLayout snackbarLayout;
-	private View mTabsHolder;
+	private FloatingActionButton floatingActionButton;
 	private int mSnackbarHeight = -1;
-	private float targetOffset = 0;
+	private boolean fabBottomMarginInitialized = false;
+	private float targetOffset = 0, fabTargetOffset = 0, fabDefaultBottomMargin = 0, snackBarY = 0;
 
 	public AHBottomNavigationBehavior() {
 		super();
@@ -48,7 +50,6 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		boolean layoutChild = super.onLayoutChild(parent, child, layoutDirection);
 		if (mTabLayout == null && mTabLayoutId != View.NO_ID) {
 			mTabLayout = findTabLayout(child);
-			getTabsHolder();
 		}
 		return layoutChild;
 	}
@@ -71,6 +72,7 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	@Override
 	public boolean layoutDependsOn(CoordinatorLayout parent, V child, View dependency) {
 		updateSnackbar(child, dependency);
+		updateFloatingActionButton(dependency);
 		return super.layoutDependsOn(parent, child, dependency);
 	}
 
@@ -103,22 +105,6 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private void animateOffset(final V child, final int offset) {
 		ensureOrCancelAnimator(child);
 		mTranslationAnimator.translationY(offset).start();
-		animateTabsHolder(offset);
-		animateSnackBar(offset);
-	}
-
-	private void animateTabsHolder(int offset) {
-		if (mTabsHolder != null) {
-			offset = offset > 0 ? 0 : 1;
-			ViewCompat.animate(mTabsHolder).alpha(offset).setDuration(ANIM_DURATION).start();
-		}
-	}
-
-	private void animateSnackBar(int offset) {
-		if (snackbarLayout != null) {
-			AHHelper.updateBottomMargin(snackbarLayout, offset > 0 ? 0 : offset,
-					offset > 0 ? offset : 0, ANIM_DURATION);
-		}
 	}
 
 	private void ensureOrCancelAnimator(V child) {
@@ -128,11 +114,19 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 			mTranslationAnimator.setUpdateListener(new ViewPropertyAnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(View view) {
-					targetOffset = view.getTranslationY();
+					// Animate snackbar
 					if (snackbarLayout != null && snackbarLayout.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+						targetOffset = view.getMeasuredHeight() - view.getTranslationY();
 						ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) snackbarLayout.getLayoutParams();
 						p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) targetOffset);
 						snackbarLayout.requestLayout();
+					}
+					// Animate Floating Action Button
+					if (floatingActionButton != null && floatingActionButton.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+						ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) floatingActionButton.getLayoutParams();
+						fabTargetOffset = fabDefaultBottomMargin - view.getTranslationY() + snackBarY;
+						p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
+						floatingActionButton.requestLayout();
 					}
 				}
 			});
@@ -142,11 +136,6 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		}
 	}
 
-	private void getTabsHolder() {
-		if (mTabLayout != null) {
-			mTabsHolder = mTabLayout.getChildAt(0);
-		}
-	}
 
 	public static <V extends View> AHBottomNavigationBehavior<V> from(V view) {
 		ViewGroup.LayoutParams params = view.getLayoutParams();
@@ -171,18 +160,32 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	}
 
 	/**
-	 * Update Snackbar position
+	 * Update Snackbar bottom margin
 	 */
-	public void updateSnackbar(View child, View dependency) {
+	public void updateSnackbar(final View child, View dependency) {
+
 		if (dependency != null && dependency instanceof Snackbar.SnackbarLayout) {
 
 			snackbarLayout = (Snackbar.SnackbarLayout) dependency;
+			snackbarLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+				@Override
+				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+					snackBarY = bottom - v.getY();
+					if (floatingActionButton != null &&
+							floatingActionButton.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+						ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) floatingActionButton.getLayoutParams();
+						fabTargetOffset = fabDefaultBottomMargin - child.getTranslationY() + snackBarY;
+						p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
+						floatingActionButton.requestLayout();
+					}
+				}
+			});
 
 			if (mSnackbarHeight == -1) {
 				mSnackbarHeight = dependency.getHeight();
 			}
 
-			int targetMargin = (int) (mSnackbarHeight + child.getMeasuredHeight() - child.getTranslationY());
+			int targetMargin = (int) (child.getMeasuredHeight() - child.getTranslationY());
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 				child.bringToFront();
 			}
@@ -195,5 +198,17 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		}
 	}
 
-
+	/**
+	 * Update floating action button bottom margin
+	 */
+	public void updateFloatingActionButton(View dependency) {
+		if (dependency != null && dependency instanceof  FloatingActionButton) {
+			floatingActionButton = (FloatingActionButton) dependency;
+			if (!fabBottomMarginInitialized && dependency.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+				fabBottomMarginInitialized = true;
+				ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) dependency.getLayoutParams();
+				fabDefaultBottomMargin = p.bottomMargin;
+			}
+		}
+	}
 }

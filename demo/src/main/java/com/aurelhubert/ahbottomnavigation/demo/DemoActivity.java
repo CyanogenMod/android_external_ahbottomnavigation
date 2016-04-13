@@ -1,11 +1,17 @@
 package com.aurelhubert.ahbottomnavigation.demo;
 
+import android.animation.Animator;
 import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.animation.OvershootInterpolator;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -18,6 +24,7 @@ public class DemoActivity extends AppCompatActivity {
 	private ArrayList<AHBottomNavigationItem> bottomNavigationItems = new ArrayList<>();
 	private FragmentManager fragmentManager = getFragmentManager();
 	private AHBottomNavigation bottomNavigation;
+	private FloatingActionButton floatingActionButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,7 @@ public class DemoActivity extends AppCompatActivity {
 	private void initUI() {
 
 		bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+		floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
 
 		AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_maps_place, R.color.color_tab_1);
 		AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_maps_local_bar, R.color.color_tab_2);
@@ -52,6 +60,74 @@ public class DemoActivity extends AppCompatActivity {
 
 				if (position == 1) {
 					bottomNavigation.setNotification(0, 1);
+
+					if (!wasSelected) {
+						floatingActionButton.setVisibility(View.VISIBLE);
+						floatingActionButton.setAlpha(0f);
+						floatingActionButton.setScaleX(0f);
+						floatingActionButton.setScaleY(0f);
+						floatingActionButton.animate()
+								.alpha(1)
+								.scaleX(1)
+								.scaleY(1)
+								.setDuration(300)
+								.setInterpolator(new OvershootInterpolator())
+								.setListener(new Animator.AnimatorListener() {
+									@Override
+									public void onAnimationStart(Animator animation) {
+
+									}
+
+									@Override
+									public void onAnimationEnd(Animator animation) {
+										floatingActionButton.animate()
+												.setInterpolator(new LinearOutSlowInInterpolator())
+												.start();
+									}
+
+									@Override
+									public void onAnimationCancel(Animator animation) {
+
+									}
+
+									@Override
+									public void onAnimationRepeat(Animator animation) {
+
+									}
+								})
+								.start();
+					}
+				} else {
+					if (floatingActionButton.getVisibility() == View.VISIBLE) {
+						floatingActionButton.animate()
+								.alpha(0)
+								.scaleX(0)
+								.scaleY(0)
+								.setDuration(300)
+								.setInterpolator(new LinearOutSlowInInterpolator())
+								.setListener(new Animator.AnimatorListener() {
+									@Override
+									public void onAnimationStart(Animator animation) {
+
+									}
+
+									@Override
+									public void onAnimationEnd(Animator animation) {
+										floatingActionButton.setVisibility(View.GONE);
+									}
+
+									@Override
+									public void onAnimationCancel(Animator animation) {
+										floatingActionButton.setVisibility(View.GONE);
+									}
+
+									@Override
+									public void onAnimationRepeat(Animator animation) {
+
+									}
+								})
+								.start();
+					}
 				}
 
 				if (!wasSelected) {
@@ -71,13 +147,15 @@ public class DemoActivity extends AppCompatActivity {
 				.replace(R.id.fragment_container, currentFragment)
 				.commit();
 
-		Handler handler = new Handler();
+		final Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				bottomNavigation.setNotification(16, 1);
+				//bottomNavigation.setNotification(16, 1);
+				Snackbar.make(bottomNavigation, "Snackbar with bottom navigation", Snackbar.LENGTH_SHORT).show();
+				handler.postDelayed(this, 8000);
 			}
-		}, 2000);
+		}, 3000);
 	}
 
 	/**
