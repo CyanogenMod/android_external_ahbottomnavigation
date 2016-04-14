@@ -151,9 +151,9 @@ public class DemoActivity extends AppCompatActivity {
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				//bottomNavigation.setNotification(16, 1);
-				Snackbar.make(bottomNavigation, "Snackbar with bottom navigation", Snackbar.LENGTH_SHORT).show();
-				handler.postDelayed(this, 8000);
+				bottomNavigation.setNotification(16, 1);
+				Snackbar.make(bottomNavigation, "Snackbar with bottom navigation",
+						Snackbar.LENGTH_SHORT).show();
 			}
 		}, 3000);
 	}
