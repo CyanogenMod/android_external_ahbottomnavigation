@@ -165,6 +165,14 @@ public class AHBottomNavigation extends FrameLayout {
 		} else {
 			createSmallItems(linearLayout);
 		}
+
+		// Force a request layout after all the items have been created
+		post(new Runnable() {
+			@Override
+			public void run() {
+				requestLayout();
+			}
+		});
 	}
 
 	/**
