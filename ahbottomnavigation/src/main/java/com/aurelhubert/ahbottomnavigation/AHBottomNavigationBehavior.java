@@ -37,9 +37,15 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private int mSnackbarHeight = -1;
 	private boolean fabBottomMarginInitialized = false;
 	private float targetOffset = 0, fabTargetOffset = 0, fabDefaultBottomMargin = 0, snackBarY = 0;
+	private boolean behaviorTranslationEnabled = true;
 
 	public AHBottomNavigationBehavior() {
 		super();
+	}
+
+	public AHBottomNavigationBehavior(boolean behaviorTranslationEnabled) {
+		super();
+		this.behaviorTranslationEnabled = behaviorTranslationEnabled;
 	}
 
 	public AHBottomNavigationBehavior(Context context, AttributeSet attrs) {
@@ -113,6 +119,9 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 * @param offset
 	 */
 	private void animateOffset(final V child, final int offset) {
+		if (!behaviorTranslationEnabled) {
+			return;
+		}
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
 			ensureOrCancelObjectAnimation(child, offset);
 			translationObjectAnimator.start();
