@@ -41,7 +41,7 @@ public class DemoActivity extends AppCompatActivity {
 		bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 		floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
 
-		AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_maps_place, R.color.color_tab_1);
+		AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_apps_black_24dp, R.color.color_tab_1);
 		AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_maps_local_bar, R.color.color_tab_2);
 		AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_maps_local_restaurant, R.color.color_tab_3);
 

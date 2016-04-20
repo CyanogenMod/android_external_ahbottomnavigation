@@ -1,5 +1,7 @@
 package com.aurelhubert.ahbottomnavigation;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -12,6 +14,7 @@ import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorUpdateListener;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -26,7 +29,8 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 
 	private int mTabLayoutId;
 	private boolean hidden = false;
-	private ViewPropertyAnimatorCompat mTranslationAnimator;
+	private ViewPropertyAnimatorCompat translationAnimator;
+	private ObjectAnimator translationObjectAnimator;
 	private TabLayout mTabLayout;
 	private Snackbar.SnackbarLayout snackbarLayout;
 	private FloatingActionButton floatingActionButton;
@@ -102,16 +106,32 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		return true;
 	}
 
+	/**
+	 * Animate offset
+	 *
+	 * @param child
+	 * @param offset
+	 */
 	private void animateOffset(final V child, final int offset) {
-		ensureOrCancelAnimator(child);
-		mTranslationAnimator.translationY(offset).start();
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+			ensureOrCancelObjectAnimation(child, offset);
+			translationObjectAnimator.start();
+		} else {
+			ensureOrCancelAnimator(child);
+			translationAnimator.translationY(offset).start();
+		}
 	}
 
+	/**
+	 * Manage animation for Android >= KITKAT
+	 *
+	 * @param child
+	 */
 	private void ensureOrCancelAnimator(V child) {
-		if (mTranslationAnimator == null) {
-			mTranslationAnimator = ViewCompat.animate(child);
-			mTranslationAnimator.setDuration(ANIM_DURATION);
-			mTranslationAnimator.setUpdateListener(new ViewPropertyAnimatorUpdateListener() {
+		if (translationAnimator == null) {
+			translationAnimator = ViewCompat.animate(child);
+			translationAnimator.setDuration(ANIM_DURATION);
+			translationAnimator.setUpdateListener(new ViewPropertyAnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(View view) {
 					// Animate snackbar
@@ -130,10 +150,49 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 					}
 				}
 			});
-			mTranslationAnimator.setInterpolator(INTERPOLATOR);
+			translationAnimator.setInterpolator(INTERPOLATOR);
 		} else {
-			mTranslationAnimator.cancel();
+			translationAnimator.cancel();
 		}
+	}
+
+	/**
+	 * Manage animation for Android < KITKAT
+	 *
+	 * @param child
+	 */
+	private void ensureOrCancelObjectAnimation(final V child, final int offset) {
+
+		if (translationObjectAnimator != null) {
+			Log.d("AHBottomNav", "ensureOrCancelObjectAnimation: CANCEL");
+			translationObjectAnimator.cancel();
+		}
+		Log.d("AHBottomNav", "ensureOrCancelObjectAnimation: NEW");
+		translationObjectAnimator = ObjectAnimator.ofFloat(child, View.TRANSLATION_Y, offset);
+		translationObjectAnimator.setDuration(ANIM_DURATION);
+		translationObjectAnimator.setInterpolator(INTERPOLATOR);
+		translationObjectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				if (snackbarLayout != null && snackbarLayout.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+					targetOffset = child.getMeasuredHeight() - child.getTranslationY();
+					ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) snackbarLayout.getLayoutParams();
+					p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) targetOffset);
+					snackbarLayout.requestLayout();
+				}
+				// Animate Floating Action Button
+				if (floatingActionButton != null && floatingActionButton.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+					ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) floatingActionButton.getLayoutParams();
+					fabTargetOffset = fabDefaultBottomMargin - child.getTranslationY() + snackBarY;
+					p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
+					floatingActionButton.requestLayout();
+
+					Log.d("AHBottomNav", "onLayoutChange: " + fabTargetOffset + " / "
+							+ fabDefaultBottomMargin + " / " + child.getTranslationY() + " / "
+							+ snackBarY);
+				}
+			}
+		});
 	}
 
 
@@ -167,19 +226,22 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		if (dependency != null && dependency instanceof Snackbar.SnackbarLayout) {
 
 			snackbarLayout = (Snackbar.SnackbarLayout) dependency;
-			snackbarLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-				@Override
-				public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-					snackBarY = bottom - v.getY();
-					if (floatingActionButton != null &&
-							floatingActionButton.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-						ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) floatingActionButton.getLayoutParams();
-						fabTargetOffset = fabDefaultBottomMargin - child.getTranslationY() + snackBarY;
-						p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
-						floatingActionButton.requestLayout();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				snackbarLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+					@Override
+					public void onLayoutChange(View v, int left, int top, int right, int bottom,
+					                           int oldLeft, int oldTop, int oldRight, int oldBottom) {
+						if (floatingActionButton != null &&
+								floatingActionButton.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+							ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) floatingActionButton.getLayoutParams();
+							snackBarY = bottom - v.getY();
+							fabTargetOffset = fabDefaultBottomMargin - child.getTranslationY() + snackBarY;
+							p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
+							floatingActionButton.requestLayout();
+						}
 					}
-				}
-			});
+				});
+			}
 
 			if (mSnackbarHeight == -1) {
 				mSnackbarHeight = dependency.getHeight();
@@ -202,7 +264,7 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 * Update floating action button bottom margin
 	 */
 	public void updateFloatingActionButton(View dependency) {
-		if (dependency != null && dependency instanceof  FloatingActionButton) {
+		if (dependency != null && dependency instanceof FloatingActionButton) {
 			floatingActionButton = (FloatingActionButton) dependency;
 			if (!fabBottomMarginInitialized && dependency.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
 				fabBottomMarginInitialized = true;
