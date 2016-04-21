@@ -1,6 +1,10 @@
 ## Changelog
 
-### Newest version: 1.1.3
+### Newest version: 1.1.4
+
+* Updated lib dependencies
+
+### 1.1.3
 
 * Fixed Snackbar when setBehaviorTranslationEnabled(false)
 
