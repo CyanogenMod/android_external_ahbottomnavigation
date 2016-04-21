@@ -5,7 +5,8 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ## Demo
 <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo4.gif" width="208" height="368" />
 
-## What's new (1.1.3)
+## What's new (1.1.3) - [Changelog](https://github.com/roughike/BottomBar/blob/master/CHANGELOG.md)
+
 * Fixed Snackbar when setBehaviorTranslationEnabled(false)
 
 ## Features
