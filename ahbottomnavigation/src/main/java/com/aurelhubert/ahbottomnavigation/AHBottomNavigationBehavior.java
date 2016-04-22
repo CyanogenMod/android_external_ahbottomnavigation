@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorUpdateListener;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -173,10 +172,9 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private void ensureOrCancelObjectAnimation(final V child, final int offset) {
 
 		if (translationObjectAnimator != null) {
-			Log.d("AHBottomNav", "ensureOrCancelObjectAnimation: CANCEL");
 			translationObjectAnimator.cancel();
 		}
-		Log.d("AHBottomNav", "ensureOrCancelObjectAnimation: NEW");
+
 		translationObjectAnimator = ObjectAnimator.ofFloat(child, View.TRANSLATION_Y, offset);
 		translationObjectAnimator.setDuration(ANIM_DURATION);
 		translationObjectAnimator.setInterpolator(INTERPOLATOR);
@@ -195,10 +193,6 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 					fabTargetOffset = fabDefaultBottomMargin - child.getTranslationY() + snackBarY;
 					p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
 					floatingActionButton.requestLayout();
-
-					Log.d("AHBottomNav", "onLayoutChange: " + fabTargetOffset + " / "
-							+ fabDefaultBottomMargin + " / " + child.getTranslationY() + " / "
-							+ snackBarY);
 				}
 			}
 		});
@@ -221,6 +215,11 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 
 	public void setTabLayoutId(int tabId) {
 		this.mTabLayoutId = tabId;
+	}
+
+
+	public void hideView(V view, int offset) {
+		animateOffset(view, offset);
 	}
 
 	public void resetOffset(V view) {

@@ -1,6 +1,12 @@
 ## Changelog
 
-### Newest version: 1.1.4
+### Newest version: 1.1.5
+
+* Added hideBottomNavigation()
+* Added CURRENT_ITEM_NONE to unselect all items
+* Improved Notifications (animation, size)
+
+### 1.1.4
 
 * Updated lib dependencies
 
