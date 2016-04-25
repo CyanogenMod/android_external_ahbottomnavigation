@@ -769,6 +769,13 @@ public class AHBottomNavigation extends FrameLayout {
 	}
 
 	/**
+	 * Refresh the AHBottomView
+	 */
+	public void refresh() {
+		createItems();
+	}
+
+	/**
 	 * Return the number of items
 	 *
 	 * @return int
@@ -791,7 +798,6 @@ public class AHBottomNavigation extends FrameLayout {
 		this.colored = colored;
 		createItems();
 	}
-
 
 	/**
 	 * Return the bottom navigation background color
@@ -861,6 +867,19 @@ public class AHBottomNavigation extends FrameLayout {
 	}
 
 	/**
+	 * Get item at the given index
+	 *
+	 * @param position int: item position
+	 * @return The item at the given position
+	 */
+	public AHBottomNavigationItem getItem(int position) {
+		if (position < 0 || position > items.size() - 1) {
+			Log.w(TAG, "The position is out of bounds of the items (" + items.size() + " elements)");
+		}
+		return items.get(position);
+	}
+
+	/**
 	 * Get the current item
 	 *
 	 * @return The current item position
@@ -881,7 +900,7 @@ public class AHBottomNavigation extends FrameLayout {
 	/**
 	 * Set the current item
 	 *
-	 * @param position    int: item
+	 * @param position    int: item position
 	 * @param useCallback boolean: use or not the callback
 	 */
 	public void setCurrentItem(int position, boolean useCallback) {

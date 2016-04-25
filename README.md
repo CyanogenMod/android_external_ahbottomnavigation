@@ -5,12 +5,10 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ## Demo
 <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo4.gif" width="208" height="368" />
 
-## What's new (1.1.6) - [Changelog](https://github.com/aurelhubert/ahbottomnavigation/blob/master/CHANGELOG.md)
+## What's new (1.1.7) - [Changelog](https://github.com/aurelhubert/ahbottomnavigation/blob/master/CHANGELOG.md)
 
-* Improved `hideBottomNavigation()` and `restoreBottomNavigation()`
-* Added `setTitleTypeface`
-* Changed method name `setNotificationBackgroundColorResource` by `setNotificationTypeface`
-* Started working on `onSaveInstanceState` and `onRestoreInstanceState` (currentItem & notifications for now)
+* Added `public AHBottomNavigationItem getItem(int position)` to get a specific item
+* Added `public void refresh()` to force a UI refresh
 
 ## Features
 * Follow the bottom navigation guidelines (https://www.google.com/design/spec/components/bottom-navigation.html)
@@ -25,7 +23,7 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ### Gradle
 ```groovy
 dependencies {
-    compile 'com.aurelhubert:ahbottomnavigation:1.1.6'
+    compile 'com.aurelhubert:ahbottomnavigation:1.1.7'
 }
 ```
 ### XML

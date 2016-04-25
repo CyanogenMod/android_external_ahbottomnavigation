@@ -1,6 +1,11 @@
 ## Changelog
 
-### Newest version: 1.1.6
+### Newest version: 1.1.7
+
+* Added `public AHBottomNavigationItem getItem(int position)` to get a specific item
+* Added `public void refresh()` to force a UI refresh
+
+### 1.1.6
 
 * Improved `hideBottomNavigation()` and `restoreBottomNavigation()`
 * Added `setTitleTypeface`
