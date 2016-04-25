@@ -1,6 +1,13 @@
 ## Changelog
 
-### Newest version: 1.1.5
+### Newest version: 1.1.6
+
+* Improved `hideBottomNavigation()` and `restoreBottomNavigation()`
+* Added `setTitleTypeface`
+* Changed method name `setNotificationBackgroundColorResource` by `setNotificationTypeface`
+* Started working on `onSaveInstanceState` and `onRestoreInstanceState` (currentItem & notifications for now)
+
+### 1.1.5
 
 * Added hideBottomNavigation()
 * Added CURRENT_ITEM_NONE to unselect all items

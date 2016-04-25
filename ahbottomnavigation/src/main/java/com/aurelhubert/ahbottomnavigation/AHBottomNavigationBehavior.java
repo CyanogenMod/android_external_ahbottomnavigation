@@ -98,10 +98,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private void handleDirection(V child, int scrollDirection) {
 		if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_DOWN && hidden) {
 			hidden = false;
-			animateOffset(child, 0);
+			animateOffset(child, 0, false);
 		} else if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_UP && !hidden) {
 			hidden = true;
-			animateOffset(child, child.getHeight());
+			animateOffset(child, child.getHeight(), false);
 		}
 	}
 
@@ -117,10 +117,11 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 * @param child
 	 * @param offset
 	 */
-	private void animateOffset(final V child, final int offset) {
-		if (!behaviorTranslationEnabled) {
+	private void animateOffset(final V child, final int offset, boolean forceAnimation) {
+		if (!behaviorTranslationEnabled && !forceAnimation) {
 			return;
 		}
+
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
 			ensureOrCancelObjectAnimation(child, offset);
 			translationObjectAnimator.start();
@@ -217,13 +218,21 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		this.mTabLayoutId = tabId;
 	}
 
-
+	/**
+	 * Hide AHBottomNavigation with animation
+	 * @param view
+	 * @param offset
+	 */
 	public void hideView(V view, int offset) {
-		animateOffset(view, offset);
+		animateOffset(view, offset, true);
 	}
 
+	/**
+	 * Reset AHBottomNavigation position with animation
+	 * @param view
+	 */
 	public void resetOffset(V view) {
-		animateOffset(view, 0);
+		animateOffset(view, 0, true);
 	}
 
 	/**
