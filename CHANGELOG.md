@@ -1,6 +1,11 @@
 ## Changelog
 
-### Newest version: 1.1.7
+### Newest version: 1.1.8
+
+* Added `hideBottomNavigation(boolean withAnimation)`
+* Added `restoreBottomNavigation(boolean withAnimation)`
+
+### 1.1.7
 
 * Added `public AHBottomNavigationItem getItem(int position)` to get a specific item
 * Added `public void refresh()` to force a UI refresh

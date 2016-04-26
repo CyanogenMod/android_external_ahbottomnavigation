@@ -76,6 +76,7 @@ public class AHBottomNavigation extends FrameLayout {
 	private boolean forceTint = false;
 	private boolean forceTitlesDisplay = false;
 	private boolean needHideBottomNavigation = false;
+	private boolean hideBottomNavigationWithAnimation = false;
 
 	// Notifications
 	private
@@ -239,9 +240,11 @@ public class AHBottomNavigation extends FrameLayout {
 			itemWidth = maxWidth;
 		}
 
+		@ColorInt int colorActiveSmall = ContextCompat.getColor(context, R.color.colorActiveSmall);
+		@ColorInt int colorInactiveSmall = ContextCompat.getColor(context, R.color.colorInactiveSmall);
+
 		float activeSize = resources.getDimension(R.dimen.bottom_navigation_text_size_active);
 		float inactiveSize = resources.getDimension(R.dimen.bottom_navigation_text_size_inactive);
-
 		int activePaddingTop = (int) resources.getDimension(R.dimen.bottom_navigation_margin_top_active);
 		int notificationActiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
 
@@ -294,11 +297,8 @@ public class AHBottomNavigation extends FrameLayout {
 				}
 
 				icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
-						currentItem == i ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
-								ContextCompat.getColor(context, R.color.colorInactiveSmall), forceTint));
-				title.setTextColor(currentItem == i ?
-						ContextCompat.getColor(context, R.color.colorActiveSmall) :
-						ContextCompat.getColor(context, R.color.colorInactiveSmall));
+						currentItem == i ? colorActiveSmall : colorInactiveSmall, forceTint));
+				title.setTextColor(currentItem == i ? colorActiveSmall :colorInactiveSmall);
 
 			} else {
 				setBackgroundColor(defaultBackgroundColor);
@@ -349,6 +349,10 @@ public class AHBottomNavigation extends FrameLayout {
 			itemWidth = maxWidth;
 		}
 
+
+		@ColorInt int colorActiveSmall = ContextCompat.getColor(context, R.color.colorActiveSmall);
+		@ColorInt int colorInactiveSmall = ContextCompat.getColor(context, R.color.colorInactiveSmall);
+
 		int activeMarginTop = (int) resources.getDimension(R.dimen.bottom_navigation_small_margin_top_active);
 		int notificationActiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
 		float difference = resources.getDimension(R.dimen.bottom_navigation_small_selected_width_difference);
@@ -395,11 +399,8 @@ public class AHBottomNavigation extends FrameLayout {
 				}
 
 				icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
-						currentItem == i ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
-								ContextCompat.getColor(context, R.color.colorInactiveSmall), forceTint));
-				title.setTextColor(currentItem == i ?
-						ContextCompat.getColor(context, R.color.colorActiveSmall) :
-						ContextCompat.getColor(context, R.color.colorInactiveSmall));
+						currentItem == i ? colorActiveSmall : colorInactiveSmall, forceTint));
+				title.setTextColor(currentItem == i ? colorActiveSmall : colorInactiveSmall);
 			} else {
 				setBackgroundColor(defaultBackgroundColor);
 				icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
@@ -451,9 +452,9 @@ public class AHBottomNavigation extends FrameLayout {
 			inactiveSize = resources.getDimension(R.dimen.bottom_navigation_text_size_forced_inactive);
 		}
 
-		int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
+		@ColorInt int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
 				accentColor;
-		int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorInactiveSmall) :
+		@ColorInt int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorInactiveSmall) :
 				inactiveColor;
 
 		for (int i = 0; i < views.size(); i++) {
@@ -555,9 +556,9 @@ public class AHBottomNavigation extends FrameLayout {
 		int inactiveMargin = (int) resources.getDimension(R.dimen.bottom_navigation_small_margin_top);
 		int notificationActiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
 		int notificationInactiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left);
-		int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
+		@ColorInt int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
 				accentColor;
-		int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorInactiveSmall) :
+		@ColorInt int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorInactiveSmall) :
 				inactiveColor;
 
 		for (int i = 0; i < views.size(); i++) {
@@ -938,41 +939,61 @@ public class AHBottomNavigation extends FrameLayout {
 			((CoordinatorLayout.LayoutParams) params).setBehavior(bottomNavigationBehavior);
 			if (needHideBottomNavigation) {
 				needHideBottomNavigation = false;
-				bottomNavigationBehavior.hideView(this, bottomNavigationHeight);
+				bottomNavigationBehavior.hideView(this, bottomNavigationHeight, hideBottomNavigationWithAnimation);
 			}
 		}
 	}
 
 	/**
-	 * Hide Bottom Navigation
+	 * Hide Bottom Navigation with animation
 	 */
 	public void hideBottomNavigation() {
+		hideBottomNavigation(true);
+	}
+
+	/**
+	 * Hide Bottom Navigation with or without animation
+	 *
+	 * @param withAnimation Boolean
+	 */
+	public void hideBottomNavigation(boolean withAnimation) {
 		if (bottomNavigationBehavior != null) {
-			bottomNavigationBehavior.hideView(this, bottomNavigationHeight);
+			bottomNavigationBehavior.hideView(this, bottomNavigationHeight, withAnimation);
 		} else if (getParent() instanceof CoordinatorLayout) {
+			//TODO
 			needHideBottomNavigation = true;
+			hideBottomNavigationWithAnimation = withAnimation;
 		} else {
 			// Hide bottom navigation
 			ViewCompat.animate(this)
 					.translationY(bottomNavigationHeight)
 					.setInterpolator(new LinearOutSlowInInterpolator())
-					.setDuration(300)
+					.setDuration(withAnimation ? 300 : 0)
 					.start();
 		}
 	}
 
 	/**
-	 * Restore Bottom Navigation
+	 * Restore Bottom Navigation with animation
 	 */
 	public void restoreBottomNavigation() {
+		restoreBottomNavigation(true);
+	}
+
+	/**
+	 * Restore Bottom Navigation with or without animation
+	 *
+	 * @param withAnimation Boolean
+	 */
+	public void restoreBottomNavigation(boolean withAnimation) {
 		if (bottomNavigationBehavior != null) {
-			bottomNavigationBehavior.resetOffset(this);
+			bottomNavigationBehavior.resetOffset(this, withAnimation);
 		} else {
 			// Show bottom navigation
 			ViewCompat.animate(this)
 					.translationY(0)
 					.setInterpolator(new LinearOutSlowInInterpolator())
-					.setDuration(300)
+					.setDuration(withAnimation ? 300 : 0)
 					.start();
 		}
 	}

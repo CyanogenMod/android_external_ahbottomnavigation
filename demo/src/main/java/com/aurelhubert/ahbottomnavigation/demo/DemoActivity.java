@@ -195,6 +195,17 @@ public class DemoActivity extends AppCompatActivity {
 	}
 
 	/**
+	 * Show or hide the bottom navigation with animation
+	 */
+	public void showOrHideBottomNavigation(boolean show) {
+		if (show) {
+			bottomNavigation.restoreBottomNavigation(true);
+		} else {
+			bottomNavigation.hideBottomNavigation(true);
+		}
+	}
+
+	/**
 	 * Return the number of items in the bottom navigation
 	 */
 	public int getBottomNavigationNbItems() {

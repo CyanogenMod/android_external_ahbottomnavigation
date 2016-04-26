@@ -98,10 +98,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private void handleDirection(V child, int scrollDirection) {
 		if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_DOWN && hidden) {
 			hidden = false;
-			animateOffset(child, 0, false);
+			animateOffset(child, 0, false, true);
 		} else if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_UP && !hidden) {
 			hidden = true;
-			animateOffset(child, child.getHeight(), false);
+			animateOffset(child, child.getHeight(), false, true);
 		}
 	}
 
@@ -117,16 +117,16 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 * @param child
 	 * @param offset
 	 */
-	private void animateOffset(final V child, final int offset, boolean forceAnimation) {
+	private void animateOffset(final V child, final int offset, boolean forceAnimation, boolean withAnimation) {
 		if (!behaviorTranslationEnabled && !forceAnimation) {
 			return;
 		}
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-			ensureOrCancelObjectAnimation(child, offset);
+			ensureOrCancelObjectAnimation(child, offset, withAnimation);
 			translationObjectAnimator.start();
 		} else {
-			ensureOrCancelAnimator(child);
+			ensureOrCancelAnimator(child, withAnimation);
 			translationAnimator.translationY(offset).start();
 		}
 	}
@@ -136,10 +136,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 *
 	 * @param child
 	 */
-	private void ensureOrCancelAnimator(V child) {
+	private void ensureOrCancelAnimator(V child, boolean withAnimation) {
 		if (translationAnimator == null) {
 			translationAnimator = ViewCompat.animate(child);
-			translationAnimator.setDuration(ANIM_DURATION);
+			translationAnimator.setDuration(withAnimation ? ANIM_DURATION : 0);
 			translationAnimator.setUpdateListener(new ViewPropertyAnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(View view) {
@@ -161,6 +161,7 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 			});
 			translationAnimator.setInterpolator(INTERPOLATOR);
 		} else {
+			translationAnimator.setDuration(withAnimation ? ANIM_DURATION : 0);
 			translationAnimator.cancel();
 		}
 	}
@@ -170,14 +171,14 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 *
 	 * @param child
 	 */
-	private void ensureOrCancelObjectAnimation(final V child, final int offset) {
+	private void ensureOrCancelObjectAnimation(final V child, final int offset, boolean withAnimation) {
 
 		if (translationObjectAnimator != null) {
 			translationObjectAnimator.cancel();
 		}
 
 		translationObjectAnimator = ObjectAnimator.ofFloat(child, View.TRANSLATION_Y, offset);
-		translationObjectAnimator.setDuration(ANIM_DURATION);
+		translationObjectAnimator.setDuration(withAnimation ? ANIM_DURATION : 0);
 		translationObjectAnimator.setInterpolator(INTERPOLATOR);
 		translationObjectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
@@ -223,16 +224,16 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 * @param view
 	 * @param offset
 	 */
-	public void hideView(V view, int offset) {
-		animateOffset(view, offset, true);
+	public void hideView(V view, int offset, boolean withAnimation) {
+		animateOffset(view, offset, true, withAnimation);
 	}
 
 	/**
 	 * Reset AHBottomNavigation position with animation
 	 * @param view
 	 */
-	public void resetOffset(V view) {
-		animateOffset(view, 0, true);
+	public void resetOffset(V view, boolean withAnimation) {
+		animateOffset(view, 0, true, withAnimation);
 	}
 
 	/**
