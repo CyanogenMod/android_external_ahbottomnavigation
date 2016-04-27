@@ -59,6 +59,7 @@ public class AHBottomNavigation extends FrameLayout {
 	private ArrayList<View> views = new ArrayList<>();
 	private AHBottomNavigationBehavior<AHBottomNavigation> bottomNavigationBehavior;
 	private View backgroundColorView;
+	private Animator circleRevealAnim;
 	private boolean colored = false;
 	private int[] notifications = {0, 0, 0, 0, 0};
 	private boolean isBehaviorTranslationSet = false;
@@ -473,20 +474,29 @@ public class AHBottomNavigation extends FrameLayout {
 						itemInactiveColor, itemActiveColor, forceTint);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
-					backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor(context));
-					int finalRadius = Math.max(getWidth(), getHeight());
 
+					int finalRadius = Math.max(getWidth(), getHeight());
 					int cx = (int) views.get(itemIndex).getX() + views.get(itemIndex).getWidth() / 2;
 					int cy = views.get(itemIndex).getHeight() / 2;
-					Animator anim = ViewAnimationUtils.createCircularReveal(backgroundColorView, cx, cy, 0, finalRadius);
-					anim.addListener(new Animator.AnimatorListener() {
+
+					if (circleRevealAnim != null && circleRevealAnim.isRunning()) {
+						circleRevealAnim.cancel();
+						setBackgroundColor(items.get(itemIndex).getColor(context));
+						backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
+					}
+
+					circleRevealAnim = ViewAnimationUtils.createCircularReveal(backgroundColorView, cx, cy, 0, finalRadius);
+					circleRevealAnim.setStartDelay(5);
+					circleRevealAnim.addListener(new Animator.AnimatorListener() {
 						@Override
 						public void onAnimationStart(Animator animation) {
+							backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor(context));
 						}
 
 						@Override
 						public void onAnimationEnd(Animator animation) {
 							setBackgroundColor(items.get(itemIndex).getColor(context));
+							backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 						}
 
 						@Override
@@ -497,7 +507,7 @@ public class AHBottomNavigation extends FrameLayout {
 						public void onAnimationRepeat(Animator animation) {
 						}
 					});
-					anim.start();
+					circleRevealAnim.start();
 				} else if (colored) {
 					AHHelper.updateViewBackgroundColor(this, currentColor,
 							items.get(itemIndex).getColor(context));
@@ -580,19 +590,28 @@ public class AHBottomNavigation extends FrameLayout {
 						itemInactiveColor, itemActiveColor, forceTint);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && colored) {
-					backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor(context));
 					int finalRadius = Math.max(getWidth(), getHeight());
 					int cx = (int) views.get(itemIndex).getX() + views.get(itemIndex).getWidth() / 2;
 					int cy = views.get(itemIndex).getHeight() / 2;
-					Animator anim = ViewAnimationUtils.createCircularReveal(backgroundColorView, cx, cy, 0, finalRadius);
-					anim.addListener(new Animator.AnimatorListener() {
+
+					if (circleRevealAnim != null && circleRevealAnim.isRunning()) {
+						circleRevealAnim.cancel();
+						setBackgroundColor(items.get(itemIndex).getColor(context));
+						backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
+					}
+
+					circleRevealAnim = ViewAnimationUtils.createCircularReveal(backgroundColorView, cx, cy, 0, finalRadius);
+					circleRevealAnim.setStartDelay(5);
+					circleRevealAnim.addListener(new Animator.AnimatorListener() {
 						@Override
 						public void onAnimationStart(Animator animation) {
+							backgroundColorView.setBackgroundColor(items.get(itemIndex).getColor(context));
 						}
 
 						@Override
 						public void onAnimationEnd(Animator animation) {
 							setBackgroundColor(items.get(itemIndex).getColor(context));
+							backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 						}
 
 						@Override
@@ -603,7 +622,7 @@ public class AHBottomNavigation extends FrameLayout {
 						public void onAnimationRepeat(Animator animation) {
 						}
 					});
-					anim.start();
+					circleRevealAnim.start();
 				} else if (colored) {
 					AHHelper.updateViewBackgroundColor(this, currentColor,
 							items.get(itemIndex).getColor(context));
