@@ -28,7 +28,7 @@
         android:layout_marginTop="@dimen/bottom_navigation_margin_top_inactive"
         android:gravity="center"
         android:lines="1"
-        android:textColor="@color/colorInactive"
+        android:textColor="@color/colorBottomNavigationInactive"
         android:textSize="@dimen/bottom_navigation_text_size_inactive"
         tools:text="Label One"/>
 

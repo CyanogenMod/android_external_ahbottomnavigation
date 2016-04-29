@@ -155,8 +155,8 @@ public class AHBottomNavigation extends FrameLayout {
 	private void init(Context context) {
 		this.context = context;
 		resources = this.context.getResources();
-		accentColor = ContextCompat.getColor(this.context, R.color.colorAccent);
-		inactiveColor = ContextCompat.getColor(this.context, R.color.colorInactive);
+		accentColor = ContextCompat.getColor(this.context, R.color.colorBottomNavigationAccent);
+		inactiveColor = ContextCompat.getColor(this.context, R.color.colorBottomNavigationInactive);
 		notificationTextColor = ContextCompat.getColor(this.context, android.R.color.white);
 		bottomNavigationHeight = (int) resources.getDimension(R.dimen.bottom_navigation_height);
 
@@ -241,8 +241,8 @@ public class AHBottomNavigation extends FrameLayout {
 			itemWidth = maxWidth;
 		}
 
-		@ColorInt int colorActiveSmall = ContextCompat.getColor(context, R.color.colorActiveSmall);
-		@ColorInt int colorInactiveSmall = ContextCompat.getColor(context, R.color.colorInactiveSmall);
+		@ColorInt int colorActiveSmall = ContextCompat.getColor(context, R.color.colorBottomNavigationActiveSmall);
+		@ColorInt int colorInactiveSmall = ContextCompat.getColor(context, R.color.colorBottomNavigationInactiveSmall);
 
 		float activeSize = resources.getDimension(R.dimen.bottom_navigation_text_size_active);
 		float inactiveSize = resources.getDimension(R.dimen.bottom_navigation_text_size_inactive);
@@ -351,8 +351,8 @@ public class AHBottomNavigation extends FrameLayout {
 		}
 
 
-		@ColorInt int colorActiveSmall = ContextCompat.getColor(context, R.color.colorActiveSmall);
-		@ColorInt int colorInactiveSmall = ContextCompat.getColor(context, R.color.colorInactiveSmall);
+		@ColorInt int colorActiveSmall = ContextCompat.getColor(context, R.color.colorBottomNavigationActiveSmall);
+		@ColorInt int colorInactiveSmall = ContextCompat.getColor(context, R.color.colorBottomNavigationInactiveSmall);
 
 		int activeMarginTop = (int) resources.getDimension(R.dimen.bottom_navigation_small_margin_top_active);
 		int notificationActiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
@@ -453,9 +453,9 @@ public class AHBottomNavigation extends FrameLayout {
 			inactiveSize = resources.getDimension(R.dimen.bottom_navigation_text_size_forced_inactive);
 		}
 
-		@ColorInt int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
+		@ColorInt int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorBottomNavigationActiveSmall) :
 				accentColor;
-		@ColorInt int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorInactiveSmall) :
+		@ColorInt int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorBottomNavigationInactiveSmall) :
 				inactiveColor;
 
 		for (int i = 0; i < views.size(); i++) {
@@ -566,9 +566,9 @@ public class AHBottomNavigation extends FrameLayout {
 		int inactiveMargin = (int) resources.getDimension(R.dimen.bottom_navigation_small_margin_top);
 		int notificationActiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
 		int notificationInactiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left);
-		@ColorInt int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorActiveSmall) :
+		@ColorInt int itemActiveColor = colored ? ContextCompat.getColor(context, R.color.colorBottomNavigationActiveSmall) :
 				accentColor;
-		@ColorInt int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorInactiveSmall) :
+		@ColorInt int itemInactiveColor = colored ? ContextCompat.getColor(context, R.color.colorBottomNavigationInactiveSmall) :
 				inactiveColor;
 
 		for (int i = 0; i < views.size(); i++) {
