@@ -71,8 +71,8 @@ public class AHBottomNavigation extends FrameLayout {
 	// Variables (Styles)
 	private Typeface titleTypeface;
 	private int defaultBackgroundColor = Color.WHITE;
-	private int accentColor = Color.WHITE;
-	private int inactiveColor = Color.WHITE;
+	//private int accentColor = Color.WHITE;
+	//private int inactiveColor = Color.WHITE;
 	private @ColorInt int itemActiveColor, itemInactiveColor;
 	private @ColorInt int coloredTitleColorActive, coloredTitleColorInactive;
 	private float titleActiveTextSize, titleInactiveTextSize;
@@ -158,23 +158,16 @@ public class AHBottomNavigation extends FrameLayout {
 		notificationTextColor = ContextCompat.getColor(context, android.R.color.white);
 		bottomNavigationHeight = (int) resources.getDimension(R.dimen.bottom_navigation_height);
 
-		// Title text size
-		titleActiveTextSize = resources.getDimension(R.dimen.bottom_navigation_text_size_active);
-		titleInactiveTextSize = resources.getDimension(R.dimen.bottom_navigation_text_size_inactive);
-		// Classic colors
-		accentColor = ContextCompat.getColor(context, R.color.colorBottomNavigationAccent);
-		inactiveColor = ContextCompat.getColor(context, R.color.colorBottomNavigationInactive);
+		// Item colors
+		itemActiveColor = ContextCompat.getColor(context, R.color.colorBottomNavigationAccent);
+		itemInactiveColor = ContextCompat.getColor(context, R.color.colorBottomNavigationInactive);
 		// Colors for colored bottom navigation
 		coloredTitleColorActive = ContextCompat.getColor(context, R.color.colorBottomNavigationActiveColored);
 		coloredTitleColorInactive = ContextCompat.getColor(context, R.color.colorBottomNavigationInactiveColored);
-		// Item color
-		itemActiveColor = accentColor;
-		itemInactiveColor = inactiveColor;
 
 		// Notifications
 		notificationActiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left_active);
 		notificationInactiveMarginLeft = (int) resources.getDimension(R.dimen.bottom_navigation_notification_margin_left);
-		notificationBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.notification_background);
 
 		ViewCompat.setElevation(this, resources.getDimension(R.dimen.bottom_navigation_elevation));
 		setClipToPadding(false);
@@ -372,6 +365,7 @@ public class AHBottomNavigation extends FrameLayout {
 		itemWidth -= difference;
 		notSelectedItemWidth = itemWidth;
 
+
 		for (int i = 0; i < items.size(); i++) {
 
 			final int itemIndex = i;
@@ -383,7 +377,10 @@ public class AHBottomNavigation extends FrameLayout {
 			TextView notification = (TextView) view.findViewById(R.id.bottom_navigation_notification);
 			icon.setImageDrawable(item.getDrawable(context));
 			title.setText(item.getTitle(context));
-			title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleActiveTextSize);
+
+			if (titleActiveTextSize != 0) {
+				title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleActiveTextSize);
+			}
 
 			if (titleTypeface != null) {
 				title.setTypeface(titleTypeface);
@@ -687,10 +684,12 @@ public class AHBottomNavigation extends FrameLayout {
 
 				if (notificationBackgroundDrawable != null) {
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-						notification.setBackground(notificationBackgroundDrawable);
+						Drawable drawable = notificationBackgroundDrawable.getConstantState().newDrawable();
+						notification.setBackground(drawable);
 					} else {
 						notification.setBackgroundDrawable(notificationBackgroundDrawable);
 					}
+
 				} else if (notificationBackgroundColor != 0) {
 					Drawable defautlDrawable = ContextCompat.getDrawable(context, R.drawable.notification_background);
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -702,7 +701,6 @@ public class AHBottomNavigation extends FrameLayout {
 					}
 				}
 			}
-
 
 			if (notifications[i].length() == 0 && notification.getText().length() > 0) {
 				notification.setText("");
@@ -805,8 +803,8 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	public void setColored(boolean colored) {
 		this.colored = colored;
-		this.itemActiveColor = colored ? coloredTitleColorActive : accentColor;
-		this.itemInactiveColor = colored ? coloredTitleColorInactive : inactiveColor;
+		this.itemActiveColor = colored ? coloredTitleColorActive : itemActiveColor;
+		this.itemInactiveColor = colored ? coloredTitleColorInactive : itemInactiveColor;
 		createItems();
 	}
 
@@ -835,7 +833,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 * @return The default accent color
 	 */
 	public int getAccentColor() {
-		return accentColor;
+		return itemActiveColor;
 	}
 
 	/**
@@ -844,7 +842,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 * @param accentColor The new accent color
 	 */
 	public void setAccentColor(int accentColor) {
-		this.accentColor = accentColor;
+		this.itemActiveColor = accentColor;
 		createItems();
 	}
 
@@ -854,7 +852,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 * @return The inactive color
 	 */
 	public int getInactiveColor() {
-		return inactiveColor;
+		return itemInactiveColor;
 	}
 
 	/**
@@ -863,7 +861,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 * @param inactiveColor The inactive color
 	 */
 	public void setInactiveColor(int inactiveColor) {
-		this.inactiveColor = inactiveColor;
+		this.itemInactiveColor = inactiveColor;
 		createItems();
 	}
 
@@ -982,7 +980,6 @@ public class AHBottomNavigation extends FrameLayout {
 		if (bottomNavigationBehavior != null) {
 			bottomNavigationBehavior.hideView(this, bottomNavigationHeight, withAnimation);
 		} else if (getParent() instanceof CoordinatorLayout) {
-			//TODO
 			needHideBottomNavigation = true;
 			hideBottomNavigationWithAnimation = withAnimation;
 		} else {
@@ -1138,8 +1135,6 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	public void setNotificationBackgroundColor(@ColorInt int color) {
 		this.notificationBackgroundColor = color;
-		notificationBackgroundDrawable = AHHelper.getTintDrawable(notificationBackgroundDrawable,
-				notificationBackgroundColor, true);
 		updateNotifications(true, UPDATE_ALL_NOTIFICATIONS);
 	}
 
@@ -1150,8 +1145,6 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	public void setNotificationBackgroundColorResource(@ColorRes int color) {
 		this.notificationBackgroundColor = ContextCompat.getColor(context, color);
-		notificationBackgroundDrawable = AHHelper.getTintDrawable(notificationBackgroundDrawable,
-				notificationBackgroundColor, true);
 		updateNotifications(true, UPDATE_ALL_NOTIFICATIONS);
 	}
 
