@@ -31,12 +31,6 @@ public class AHBottomNavigationItem {
 
 	/**
 	 * Constructor
-	 */
-	public AHBottomNavigationItem() {
-	}
-
-	/**
-	 * Constructor
 	 *
 	 * @param title    Title
 	 * @param resource Drawable resource
