@@ -1,6 +1,17 @@
 ## Changelog
 
-### Newest version: 1.1.8
+### Newest version: 1.2.0
+
+* Updated Notification: now accept String (empty String to remove the notification)
+* Deprecated integer for Notification
+* Removed deprecated methods & interface for `AHBottomNavigationListener`
+* Fixed touch ripples when the bottom navigation is colored
+* Cleaned colors.xml to avoid conflicts
+* Removed constructor AHBottomNavigationItem()
+* Added `setTitleTextSize(float activeSize, float inactiveSize)`
+* Added `setNotificationMarginLeft(int activeMargin, int inactiveMargin)`
+
+### 1.1.8
 
 * Added `hideBottomNavigation(boolean withAnimation)`
 * Added `restoreBottomNavigation(boolean withAnimation)`

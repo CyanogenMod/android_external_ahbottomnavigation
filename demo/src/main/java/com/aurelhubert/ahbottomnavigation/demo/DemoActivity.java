@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
@@ -52,14 +53,16 @@ public class DemoActivity extends AppCompatActivity {
 		bottomNavigation.addItems(bottomNavigationItems);
 		bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
 		bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
-		bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
+
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
 
 		bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(int position, boolean wasSelected) {
 
 				if (position == 1) {
-					bottomNavigation.setNotification(0, 1);
+					bottomNavigation.setNotification("", 1);
 
 					if (!wasSelected) {
 						floatingActionButton.setVisibility(View.VISIBLE);
@@ -151,7 +154,7 @@ public class DemoActivity extends AppCompatActivity {
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				bottomNavigation.setNotification(16, 1);
+				bottomNavigation.setNotification("16", 1);
 				Snackbar.make(bottomNavigation, "Snackbar with bottom navigation",
 						Snackbar.LENGTH_SHORT).show();
 			}
@@ -187,7 +190,7 @@ public class DemoActivity extends AppCompatActivity {
 		if (addItems) {
 			bottomNavigation.addItem(item4);
 			bottomNavigation.addItem(item5);
-			bottomNavigation.setNotification(1, 3);
+			bottomNavigation.setNotification("1", 3);
 		} else {
 			bottomNavigation.removeAllItems();
 			bottomNavigation.addItems(bottomNavigationItems);
