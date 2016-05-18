@@ -1,6 +1,10 @@
 ## Changelog
 
-### Newest version: 1.2.1
+### Newest version: 1.2.2
+
+* Fixed bug when switching between normal and colored mode
+
+### 1.2.1
 
 * Fixed method typo `setNotificationMarginLef` => `setNotificationMarginLeft`
 * Avoid multiple call for showing/hiding AHBottomNavigation
