@@ -30,7 +30,7 @@ public class DemoFragment extends Fragment {
 		b.putInt("index", index);
 		fragment.setArguments(b);
 		return fragment;
-	}g
+	}
 
 	@Nullable
 	@Override
