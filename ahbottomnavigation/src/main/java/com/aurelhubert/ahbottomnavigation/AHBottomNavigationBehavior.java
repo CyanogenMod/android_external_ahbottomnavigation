@@ -225,7 +225,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 * @param offset
 	 */
 	public void hideView(V view, int offset, boolean withAnimation) {
-		animateOffset(view, offset, true, withAnimation);
+		if (!hidden) {
+			hidden = true;
+			animateOffset(view, offset, true, withAnimation);
+		}
 	}
 
 	/**
@@ -233,7 +236,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 * @param view
 	 */
 	public void resetOffset(V view, boolean withAnimation) {
-		animateOffset(view, 0, true, withAnimation);
+		if (hidden) {
+			hidden = false;
+			animateOffset(view, 0, true, withAnimation);
+		}
 	}
 
 	/**
