@@ -1163,7 +1163,7 @@ public class AHBottomNavigation extends FrameLayout {
 	 * @param activeMargin
 	 * @param inactiveMargin
 	 */
-	public void setNotificationMarginLef(int activeMargin, int inactiveMargin) {
+	public void setNotificationMarginLeft(int activeMargin, int inactiveMargin) {
 		this.notificationActiveMarginLeft = activeMargin;
 		this.notificationInactiveMarginLeft = inactiveMargin;
 		createItems();
