@@ -1,8 +1,8 @@
 package com.aurelhubert.ahbottomnavigation.demo;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -30,12 +30,12 @@ public class DemoFragment extends Fragment {
 		b.putInt("index", index);
 		fragment.setArguments(b);
 		return fragment;
-	}
+	}g
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (getArguments().getInt("index", -1) == 0) {
+		if (getArguments().getInt("index", 0) == 0) {
 			View view = inflater.inflate(R.layout.fragment_demo_settings, container, false);
 			initDemoSettings(view);
 			return view;
@@ -82,7 +82,6 @@ public class DemoFragment extends Fragment {
 	 * Init the fragment
 	 */
 	private void initDemoList(View view) {
-
 		recyclerView = (RecyclerView) view.findViewById(R.id.fragment_demo_recycler_view);
 		recyclerView.setHasFixedSize(true);
 		layoutManager = new LinearLayoutManager(getActivity());
@@ -101,6 +100,15 @@ public class DemoFragment extends Fragment {
 	 * Refresh
 	 */
 	public void refresh() {
-		recyclerView.smoothScrollToPosition(0);
+		if (getArguments().getInt("index", 0) > 0 && recyclerView != null) {
+			recyclerView.smoothScrollToPosition(0);
+		}
+	}
+
+	/**
+	 * Called when a fragment will be displayed
+	 */
+	public void willBeDisplayed() {
+		// Do what you want here, for example animate the content
 	}
 }

@@ -1,7 +1,6 @@
 package com.aurelhubert.ahbottomnavigation.demo;
 
 import android.animation.Animator;
-import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,20 +9,23 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
 
 import java.util.ArrayList;
 
 public class DemoActivity extends AppCompatActivity {
 
 	private DemoFragment currentFragment;
+	private DemoViewPagerAdapter adapter;
 	private ArrayList<AHBottomNavigationItem> bottomNavigationItems = new ArrayList<>();
-	private FragmentManager fragmentManager = getFragmentManager();
+
+	// UI
+	private AHBottomNavigationViewPager viewPager;
 	private AHBottomNavigation bottomNavigation;
 	private FloatingActionButton floatingActionButton;
 
@@ -40,6 +42,7 @@ public class DemoActivity extends AppCompatActivity {
 	private void initUI() {
 
 		bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+		viewPager = (AHBottomNavigationViewPager) findViewById(R.id.view_pager);
 		floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
 
 		AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_apps_black_24dp, R.color.color_tab_1);
@@ -54,52 +57,56 @@ public class DemoActivity extends AppCompatActivity {
 		bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
 		bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
 
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-
 		bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(int position, boolean wasSelected) {
 
+				currentFragment = adapter.getCurrentFragment();
+				if (wasSelected) {
+					currentFragment.refresh();
+					return;
+				}
+				viewPager.setCurrentItem(position, false);
+				currentFragment.willBeDisplayed();
+
 				if (position == 1) {
 					bottomNavigation.setNotification("", 1);
 
-					if (!wasSelected) {
-						floatingActionButton.setVisibility(View.VISIBLE);
-						floatingActionButton.setAlpha(0f);
-						floatingActionButton.setScaleX(0f);
-						floatingActionButton.setScaleY(0f);
-						floatingActionButton.animate()
-								.alpha(1)
-								.scaleX(1)
-								.scaleY(1)
-								.setDuration(300)
-								.setInterpolator(new OvershootInterpolator())
-								.setListener(new Animator.AnimatorListener() {
-									@Override
-									public void onAnimationStart(Animator animation) {
+					floatingActionButton.setVisibility(View.VISIBLE);
+					floatingActionButton.setAlpha(0f);
+					floatingActionButton.setScaleX(0f);
+					floatingActionButton.setScaleY(0f);
+					floatingActionButton.animate()
+							.alpha(1)
+							.scaleX(1)
+							.scaleY(1)
+							.setDuration(300)
+							.setInterpolator(new OvershootInterpolator())
+							.setListener(new Animator.AnimatorListener() {
+								@Override
+								public void onAnimationStart(Animator animation) {
 
-									}
+								}
 
-									@Override
-									public void onAnimationEnd(Animator animation) {
-										floatingActionButton.animate()
-												.setInterpolator(new LinearOutSlowInInterpolator())
-												.start();
-									}
+								@Override
+								public void onAnimationEnd(Animator animation) {
+									floatingActionButton.animate()
+											.setInterpolator(new LinearOutSlowInInterpolator())
+											.start();
+								}
 
-									@Override
-									public void onAnimationCancel(Animator animation) {
+								@Override
+								public void onAnimationCancel(Animator animation) {
 
-									}
+								}
 
-									@Override
-									public void onAnimationRepeat(Animator animation) {
+								@Override
+								public void onAnimationRepeat(Animator animation) {
 
-									}
-								})
-								.start();
-					}
+								}
+							})
+							.start();
+
 				} else {
 					if (floatingActionButton.getVisibility() == View.VISIBLE) {
 						floatingActionButton.animate()
@@ -132,23 +139,14 @@ public class DemoActivity extends AppCompatActivity {
 								.start();
 					}
 				}
-
-				if (!wasSelected) {
-					currentFragment = DemoFragment.newInstance(position);
-					fragmentManager.beginTransaction()
-							.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-							.replace(R.id.fragment_container, currentFragment)
-							.commit();
-				} else if (position > 0) {
-					currentFragment.refresh();
-				}
 			}
 		});
 
-		currentFragment = DemoFragment.newInstance(0);
-		fragmentManager.beginTransaction()
-				.replace(R.id.fragment_container, currentFragment)
-				.commit();
+		viewPager.setOffscreenPageLimit(4);
+		adapter = new DemoViewPagerAdapter(getSupportFragmentManager());
+		viewPager.setAdapter(adapter);
+
+		currentFragment = adapter.getCurrentFragment();
 
 		final Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
