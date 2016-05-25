@@ -1190,6 +1190,16 @@ public class AHBottomNavigation extends FrameLayout {
 		setClipToPadding(false);
 	}
 
+	/**
+	 * Activate or not the elevation, and set the value
+	 * @param useElevation boolean
+	 * @param elevation float
+	 */
+	public void setUseElevation(boolean useElevation, float elevation) {
+		ViewCompat.setElevation(this, useElevation ? elevation : 0);
+		setClipToPadding(false);
+	}
+
 	////////////////
 	// INTERFACES //
 	////////////////
