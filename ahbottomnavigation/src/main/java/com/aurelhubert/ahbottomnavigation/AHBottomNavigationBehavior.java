@@ -38,6 +38,9 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private float targetOffset = 0, fabTargetOffset = 0, fabDefaultBottomMargin = 0, snackBarY = 0;
 	private boolean behaviorTranslationEnabled = true;
 
+	/**
+	 * Constructor
+	 */
 	public AHBottomNavigationBehavior() {
 		super();
 	}
@@ -91,7 +94,26 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 
 	@Override
 	public void onDirectionNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx, int dy, int[] consumed, @ScrollDirection int scrollDirection) {
-		handleDirection(child, scrollDirection);
+	}
+
+	@Override
+	protected boolean onNestedDirectionFling(CoordinatorLayout coordinatorLayout, V child, View target, float velocityX, float velocityY, @ScrollDirection int scrollDirection) {
+		return false;
+	}
+
+	@Override
+	public void onNestedScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+		super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+		if (dyConsumed < 0) {
+			handleDirection(child, ScrollDirection.SCROLL_DIRECTION_DOWN);
+		} else if (dyConsumed > 0) {
+			handleDirection(child, ScrollDirection.SCROLL_DIRECTION_UP);
+		}
+	}
+
+	@Override
+	public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, V child, View directTargetChild, View target, int nestedScrollAxes) {
+		return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL || super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
 	}
 
 	/**
@@ -112,12 +134,6 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		}
 	}
 
-	@Override
-	protected boolean onNestedDirectionFling(CoordinatorLayout coordinatorLayout, V child, View target, float velocityX, float velocityY, @ScrollDirection int scrollDirection) {
-		handleDirection(child, scrollDirection);
-		return true;
-	}
-
 	/**
 	 * Animate offset
 	 *
@@ -128,7 +144,6 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		if (!behaviorTranslationEnabled && !forceAnimation) {
 			return;
 		}
-
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
 			ensureOrCancelObjectAnimation(child, offset, withAnimation);
 			translationObjectAnimator.start();
