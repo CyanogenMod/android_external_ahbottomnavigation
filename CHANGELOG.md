@@ -1,6 +1,12 @@
 ## Changelog
 
-### Newest version: 1.2.2
+### Newest version: 1.2.3
+
+* Added `setUseElevation(boolean useElevation, float elevation)`
+* Fixed a bug with `behaviorTranslationEnabled` & `restoreBottomNavigation`
+* Improved translation behavior when the Scroll View is not long enough.
+
+### 1.2.2
 
 * Fixed bug when switching between normal and colored mode
 
