@@ -94,8 +94,15 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 		handleDirection(child, scrollDirection);
 	}
 
-
+	/**
+	 * Handle scroll direction
+	 * @param child
+	 * @param scrollDirection
+	 */
 	private void handleDirection(V child, int scrollDirection) {
+		if (!behaviorTranslationEnabled) {
+			return;
+		}
 		if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_DOWN && hidden) {
 			hidden = false;
 			animateOffset(child, 0, false, true);
@@ -217,6 +224,14 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 
 	public void setTabLayoutId(int tabId) {
 		this.mTabLayoutId = tabId;
+	}
+
+	/**
+	 * Enable or not the behavior translation
+	 * @param behaviorTranslationEnabled
+	 */
+	public void setBehaviorTranslationEnabled(boolean behaviorTranslationEnabled) {
+		this.behaviorTranslationEnabled = behaviorTranslationEnabled;
 	}
 
 	/**

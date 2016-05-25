@@ -961,7 +961,11 @@ public class AHBottomNavigation extends FrameLayout {
 		this.behaviorTranslationEnabled = behaviorTranslationEnabled;
 		if (getParent() instanceof CoordinatorLayout) {
 			ViewGroup.LayoutParams params = getLayoutParams();
-			bottomNavigationBehavior = new AHBottomNavigationBehavior<>(behaviorTranslationEnabled);
+			if (bottomNavigationBehavior == null) {
+				bottomNavigationBehavior = new AHBottomNavigationBehavior<>(behaviorTranslationEnabled);
+			} else {
+				bottomNavigationBehavior.setBehaviorTranslationEnabled(behaviorTranslationEnabled);
+			}
 			((CoordinatorLayout.LayoutParams) params).setBehavior(bottomNavigationBehavior);
 			if (needHideBottomNavigation) {
 				needHideBottomNavigation = false;
