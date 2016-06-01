@@ -71,11 +71,12 @@ public class AHBottomNavigation extends FrameLayout {
 	// Variables (Styles)
 	private Typeface titleTypeface;
 	private int defaultBackgroundColor = Color.WHITE;
-	//private int accentColor = Color.WHITE;
-	//private int inactiveColor = Color.WHITE;
-	private @ColorInt int itemActiveColor, itemInactiveColor;
-	private @ColorInt int titleColorActive, titleColorInactive;
-	private @ColorInt int coloredTitleColorActive, coloredTitleColorInactive;
+	private @ColorInt int itemActiveColor;
+	private @ColorInt int itemInactiveColor;
+	private @ColorInt int titleColorActive;
+	private @ColorInt int titleColorInactive;
+	private @ColorInt int coloredTitleColorActive;
+	private @ColorInt int coloredTitleColorInactive;
 	private float titleActiveTextSize, titleInactiveTextSize;
 	private int bottomNavigationHeight;
 	private float selectedItemWidth, notSelectedItemWidth;
