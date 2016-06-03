@@ -60,13 +60,18 @@ public class DemoActivity extends AppCompatActivity {
 		bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(int position, boolean wasSelected) {
-
-				currentFragment = adapter.getCurrentFragment();
+;
 				if (wasSelected) {
 					currentFragment.refresh();
 					return;
 				}
+
+				if (currentFragment != null) {
+					currentFragment.willBeHidden();
+				}
+
 				viewPager.setCurrentItem(position, false);
+				currentFragment = adapter.getCurrentFragment();
 				currentFragment.willBeDisplayed();
 
 				if (position == 1) {

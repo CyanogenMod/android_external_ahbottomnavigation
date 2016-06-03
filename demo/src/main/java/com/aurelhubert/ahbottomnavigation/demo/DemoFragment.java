@@ -9,7 +9,10 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 
@@ -18,6 +21,7 @@ import java.util.ArrayList;
  */
 public class DemoFragment extends Fragment {
 
+	private FrameLayout fragmentContainer;
 	private RecyclerView recyclerView;
 	private RecyclerView.LayoutManager layoutManager;
 
@@ -50,6 +54,7 @@ public class DemoFragment extends Fragment {
 	 * Init demo settings
 	 */
 	private void initDemoSettings(View view) {
+
 		final DemoActivity demoActivity = (DemoActivity) getActivity();
 		final SwitchCompat switchColored = (SwitchCompat) view.findViewById(R.id.fragment_demo_switch_colored);
 		final SwitchCompat switchFiveItems = (SwitchCompat) view.findViewById(R.id.fragment_demo_switch_five_items);
@@ -82,6 +87,8 @@ public class DemoFragment extends Fragment {
 	 * Init the fragment
 	 */
 	private void initDemoList(View view) {
+
+		fragmentContainer = (FrameLayout) view.findViewById(R.id.fragment_container);
 		recyclerView = (RecyclerView) view.findViewById(R.id.fragment_demo_recycler_view);
 		recyclerView.setHasFixedSize(true);
 		layoutManager = new LinearLayoutManager(getActivity());
@@ -110,5 +117,19 @@ public class DemoFragment extends Fragment {
 	 */
 	public void willBeDisplayed() {
 		// Do what you want here, for example animate the content
+		if (fragmentContainer != null) {
+			Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
+			fragmentContainer.startAnimation(fadeIn);
+		}
+	}
+
+	/**
+	 * Called when a fragment will be hidden
+	 */
+	public void willBeHidden() {
+		if (fragmentContainer != null) {
+			Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out);
+			fragmentContainer.startAnimation(fadeOut);
+		}
 	}
 }
