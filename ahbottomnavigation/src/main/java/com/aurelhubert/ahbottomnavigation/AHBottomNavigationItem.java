@@ -35,7 +35,7 @@ public class AHBottomNavigationItem {
 	 * @param title    Title
 	 * @param resource Drawable resource
 	 */
-	public AHBottomNavigationItem(String title, int resource) {
+	public AHBottomNavigationItem(String title, @DrawableRes int resource) {
 		this.title = title;
 		this.drawableRes = resource;
 	}
@@ -46,7 +46,7 @@ public class AHBottomNavigationItem {
 	 * @param color    Background color
 	 */
 	@Deprecated
-	public AHBottomNavigationItem(String title, int resource, int color) {
+	public AHBottomNavigationItem(String title, @DrawableRes int resource, @ColorRes int color) {
 		this.title = title;
 		this.drawableRes = resource;
 		this.color = color;
@@ -63,6 +63,17 @@ public class AHBottomNavigationItem {
 		this.titleRes = titleRes;
 		this.drawableRes = drawableRes;
 		this.colorRes = colorRes;
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param title    String
+	 * @param drawable Drawable
+	 */
+	public AHBottomNavigationItem(String title, Drawable drawable) {
+		this.title = title;
+		this.drawable = drawable;
 	}
 
 	/**
