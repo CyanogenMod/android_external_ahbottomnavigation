@@ -5,11 +5,13 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ## Demo
 <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo4.gif" width="208" height="368" />
 
-## What's new (1.2.3) - [Changelog](https://github.com/aurelhubert/ahbottomnavigation/blob/master/CHANGELOG.md)
+## What's new (1.3.0) - [Changelog](https://github.com/aurelhubert/ahbottomnavigation/blob/master/CHANGELOG.md)
 
-* Added `setUseElevation(boolean useElevation, float elevation)`
-* Fixed a bug with `behaviorTranslationEnabled` & `restoreBottomNavigation`
-* Improved translation behavior when the Scroll View is not long enough.
+* **BREAKING!** Updated listener, now return a boolean => `boolean onTabSelected(int position, boolean wasSelected);`
+* Improved notification management for small items
+* Added notification elevation
+* Managed complex drawable (selector with states)
+* Added constructor `public AHBottomNavigationItem(String title, Drawable drawable)`
 
 ## Features
 * Follow the bottom navigation guidelines (https://www.google.com/design/spec/components/bottom-navigation.html)
@@ -24,7 +26,7 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ### Gradle
 ```groovy
 dependencies {
-    compile 'com.aurelhubert:ahbottomnavigation:1.2.3'
+    compile 'com.aurelhubert:ahbottomnavigation:1.3.0'
 }
 ```
 ### XML
@@ -98,8 +100,9 @@ bottomNavigation.setNotification("", 1);
 // Set listener
 bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 	@Override
-	public void onTabSelected(int position, boolean wasSelected) {
+	public boolean onTabSelected(int position, boolean wasSelected) {
 		// Do something cool here...
+        return true;
 	}
 });
 ```

@@ -1,6 +1,14 @@
 ## Changelog
 
-### Newest version: 1.2.3
+### Newest version: 1.3.0
+
+* **BREAKING!** Updated listener, now return a boolean => `boolean onTabSelected(int position, boolean wasSelected);`
+* Improved notification management for small items
+* Added notification elevation
+* Managed complex drawable (selector with states)
+* Added constructor `public AHBottomNavigationItem(String title, Drawable drawable)`
+
+### 1.2.3
 
 * Added `setUseElevation(boolean useElevation, float elevation)`
 * Fixed a bug with `behaviorTranslationEnabled` & `restoreBottomNavigation`
