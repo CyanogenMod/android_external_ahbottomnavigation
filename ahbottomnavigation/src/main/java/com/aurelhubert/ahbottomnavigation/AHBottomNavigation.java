@@ -71,12 +71,24 @@ public class AHBottomNavigation extends FrameLayout {
 	// Variables (Styles)
 	private Typeface titleTypeface;
 	private int defaultBackgroundColor = Color.WHITE;
-	private @ColorInt int itemActiveColor;
-	private @ColorInt int itemInactiveColor;
-	private @ColorInt int titleColorActive;
-	private @ColorInt int titleColorInactive;
-	private @ColorInt int coloredTitleColorActive;
-	private @ColorInt int coloredTitleColorInactive;
+	private
+	@ColorInt
+	int itemActiveColor;
+	private
+	@ColorInt
+	int itemInactiveColor;
+	private
+	@ColorInt
+	int titleColorActive;
+	private
+	@ColorInt
+	int titleColorInactive;
+	private
+	@ColorInt
+	int coloredTitleColorActive;
+	private
+	@ColorInt
+	int coloredTitleColorInactive;
 	private float titleActiveTextSize, titleInactiveTextSize;
 	private int bottomNavigationHeight;
 	private float selectedItemWidth, notSelectedItemWidth;
@@ -84,8 +96,12 @@ public class AHBottomNavigation extends FrameLayout {
 	private boolean forceTitlesDisplay = false;
 
 	// Notifications
-	private @ColorInt int notificationTextColor;
-	private @ColorInt int notificationBackgroundColor;
+	private
+	@ColorInt
+	int notificationTextColor;
+	private
+	@ColorInt
+	int notificationBackgroundColor;
 	private Drawable notificationBackgroundDrawable;
 	private Typeface notificationTypeface;
 	private int notificationActiveMarginLeft, notificationInactiveMarginLeft;
@@ -325,7 +341,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 			icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
 					currentItem == i ? itemActiveColor : itemInactiveColor, forceTint));
-			title.setTextColor(currentItem == i ? itemActiveColor :itemInactiveColor);
+			title.setTextColor(currentItem == i ? itemActiveColor : itemInactiveColor);
 			title.setTextSize(TypedValue.COMPLEX_UNIT_PX, currentItem == i ? activeSize : inactiveSize);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
@@ -463,6 +479,11 @@ public class AHBottomNavigation extends FrameLayout {
 			return;
 		}
 
+		if (tabSelectedListener != null && useCallback) {
+			boolean selectionAllowed = tabSelectedListener.onTabSelected(itemIndex, false);
+			if (!selectionAllowed) return;
+		}
+
 		int activeMarginTop = (int) resources.getDimension(R.dimen.bottom_navigation_margin_top_active);
 		int inactiveMarginTop = (int) resources.getDimension(R.dimen.bottom_navigation_margin_top_inactive);
 		float activeSize = resources.getDimension(R.dimen.bottom_navigation_text_size_active);
@@ -559,9 +580,11 @@ public class AHBottomNavigation extends FrameLayout {
 			backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 		}
 
+		/*
 		if (tabSelectedListener != null && useCallback) {
 			tabSelectedListener.onTabSelected(itemIndex, false);
 		}
+		*/
 	}
 
 	/**
@@ -577,6 +600,11 @@ public class AHBottomNavigation extends FrameLayout {
 				tabSelectedListener.onTabSelected(itemIndex, true);
 			}
 			return;
+		}
+
+		if (tabSelectedListener != null && useCallback) {
+			boolean selectionAllowed = tabSelectedListener.onTabSelected(itemIndex, false);
+			if (!selectionAllowed) return;
 		}
 
 		int activeMarginTop = (int) resources.getDimension(R.dimen.bottom_navigation_small_margin_top_active);
@@ -671,9 +699,11 @@ public class AHBottomNavigation extends FrameLayout {
 			backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 		}
 
+		/*
 		if (tabSelectedListener != null && useCallback) {
 			tabSelectedListener.onTabSelected(itemIndex, false);
 		}
+		*/
 	}
 
 	/**
@@ -1114,7 +1144,7 @@ public class AHBottomNavigation extends FrameLayout {
 	/**
 	 * Set Notification content
 	 *
-	 * @param title String
+	 * @param title        String
 	 * @param itemPosition int
 	 */
 	public void setNotification(String title, int itemPosition) {
@@ -1184,6 +1214,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Set the notification margin left
+	 *
 	 * @param activeMargin
 	 * @param inactiveMargin
 	 */
@@ -1206,8 +1237,9 @@ public class AHBottomNavigation extends FrameLayout {
 
 	/**
 	 * Activate or not the elevation, and set the value
+	 *
 	 * @param useElevation boolean
-	 * @param elevation float
+	 * @param elevation    float
 	 */
 	public void setUseElevation(boolean useElevation, float elevation) {
 		ViewCompat.setElevation(this, useElevation ? elevation : 0);
@@ -1222,7 +1254,14 @@ public class AHBottomNavigation extends FrameLayout {
 	 *
 	 */
 	public interface OnTabSelectedListener {
-		void onTabSelected(int position, boolean wasSelected);
+		/**
+		 * Called when a tab has been selected (clicked)
+		 *
+		 * @param position    int: Position of the selected tab
+		 * @param wasSelected boolean: true if the tab was already selected
+		 * @return boolean: true for updating the tab UI, false otherwise
+		 */
+		boolean onTabSelected(int position, boolean wasSelected);
 	}
 
 }
