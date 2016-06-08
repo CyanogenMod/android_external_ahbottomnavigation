@@ -59,11 +59,11 @@ public class DemoActivity extends AppCompatActivity {
 
 		bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 			@Override
-			public void onTabSelected(int position, boolean wasSelected) {
-;
+			public boolean onTabSelected(int position, boolean wasSelected) {
+
 				if (wasSelected) {
 					currentFragment.refresh();
-					return;
+					return true;
 				}
 
 				if (currentFragment != null) {
@@ -144,6 +144,8 @@ public class DemoActivity extends AppCompatActivity {
 								.start();
 					}
 				}
+
+				return true;
 			}
 		});
 
